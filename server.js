@@ -66,7 +66,6 @@ stories.then((storyFiles) => {
     console.log(`App listening on port ${PORT}`);
   });
 
-  //process.exit(0);
 });
 
 
@@ -76,9 +75,6 @@ function normalizeAssets(assets) {
 
 function appMiddleware(req, res) {
   const assetsByChunkName = res.locals.webpackStats.toJson().assetsByChunkName
-
-  // then use `assetsByChunkName` for server-sider rendering
-  // For example, if you have only one main chunk:
 
   res.send(`
     <html>
