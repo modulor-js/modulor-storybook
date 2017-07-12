@@ -60,6 +60,7 @@ stories.then((storyFiles) => {
   const compiler = webpack(webpackConfigPrepared);
 
   app.use(webpackMiddleware(compiler, { serverSideRender: true }));
+  app.get('/preview.html', previewMiddleware);
   app.use(appMiddleware);
 
   app.listen(PORT, () => {
@@ -74,6 +75,34 @@ function normalizeAssets(assets) {
 }
 
 function appMiddleware(req, res) {
+  const assetsByChunkName = res.locals.webpackStats.toJson().assetsByChunkName
+
+  res.send(`
+    <html>
+      <head>
+        <title>My App</title>
+                    ${
+                            normalizeAssets(assetsByChunkName.application)
+                            .filter(path => path.endsWith('.css'))
+                            .map(path => `<link rel="stylesheet" href="${path}" />`)
+                            .join('\n')
+                    }
+      </head>
+      <body>
+        <iframe src="/preview.html"></iframe>
+        <div id="root"></div>
+                    ${
+                            normalizeAssets(assetsByChunkName.application)
+                            .filter(path => path.endsWith('.js'))
+                            .map(path => `<script src="${path}"></script>`)
+                            .join('\n')
+                    }
+      </body>
+    </html>
+  `);
+}
+
+function previewMiddleware(req, res) {
   const assetsByChunkName = res.locals.webpackStats.toJson().assetsByChunkName
 
   res.send(`
