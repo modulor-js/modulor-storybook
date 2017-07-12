@@ -1,0 +1,19 @@
+{
+  "name": "webpack_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.11.0",
+    "filehound": "^1.16.2",
+    "webpack": "^3.1.0"
+  },
+  "devDependencies": {
+    "webpack-dev-middleware": "^1.11.0"
+  }
+}
