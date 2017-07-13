@@ -29,7 +29,7 @@ Split(['#preview-block', '#info-block'], {
 
 document.querySelector('#stories-tree').innerHTML = storiesTreeTemplate({ stories });
 
-router.add('/:story/:substory?', (story, substory) => {
+router.add('/:story/:substory', (story, substory) => {
   $previewFrame.src = `/preview.html#${story}/${substory}`
 });
 
