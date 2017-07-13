@@ -8,9 +8,9 @@ module.exports = (scope) => `
         <li>
           <a href="#${storyName}/${subStoryName}">${subStoryName}</a>
         </li>
-      `).join('\n')}
+      `).join('')}
       </ul>
     </li>
-  `).join('\n')}
+  `).join('')}
   </ul>
 `;
