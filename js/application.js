@@ -1,10 +1,8 @@
-const managerApp = require('./manager');
-const previewApp = require('./preview');
-
+//deprecated!
 if(inIframe()){
-  previewApp();
+  require('./manager')();
 } else {
-  managerApp();
+  require('./preview')();
 }
 
 function inIframe(){

@@ -58,7 +58,8 @@ stories.then((storyFiles) => {
 
   const webpackConfigPrepared = Object.assign({}, webpackConfig, {
     entry: {
-      application: storyFiles.concat(path.resolve(PROJECT_DIR, 'js/application.js'))
+      manager: storyFiles.concat(path.resolve(PROJECT_DIR, 'js/manager.js')),
+      preview: storyFiles.concat(path.resolve(PROJECT_DIR, 'js/preview.js'))
     }
   });
 
@@ -85,7 +86,7 @@ function appMiddleware(req, res) {
   res.send(commonTemplate({
     headContent: managerHeadTemplate(),
     bodyContent: managerTemplate({
-      assets: normalizeAssets(assetsByChunkName.application)
+      assets: normalizeAssets(assetsByChunkName.manager)
     })
   }));
 }
@@ -98,7 +99,7 @@ function previewMiddleware(req, res) {
       <title>Story preview</title>
     `,
     bodyContent: previewTemplate({
-      assets: normalizeAssets(assetsByChunkName.application)
+      assets: normalizeAssets(assetsByChunkName.preview)
     })
   }));
 }

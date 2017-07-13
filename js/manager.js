@@ -7,36 +7,40 @@ const storiesTreeTemplate = require('../templates/stories_tree.html');
 
 const stories = getStories();
 
-module.exports = () => {
 
-  console.log('manager app init', stories);
+console.log('manager app init', stories);
 
-  const router = new Router({ useHash: true });
+const router = new Router({ useHash: true });
 
-  Split(['.left-panel', '.right-panel'], {
-    sizes: [20, 80],
-    gutterSize: 8,
-    cursor: 'col-resize'
-  });
+const $previewFrame = document.querySelector('#preview-frame');
 
-  Split(['#preview-block', '#info-block'], {
-    direction: 'vertical',
-    sizes: [25, 75],
-    gutterSize: 8,
-    cursor: 'row-resize'
-  });
+Split(['.left-panel', '.right-panel'], {
+  sizes: [20, 80],
+  gutterSize: 8,
+  cursor: 'col-resize'
+});
 
-  document.querySelector('#stories-tree').innerHTML = storiesTreeTemplate({ stories });
+Split(['#preview-block', '#info-block'], {
+  direction: 'vertical',
+  sizes: [25, 75],
+  gutterSize: 8,
+  cursor: 'row-resize'
+});
 
-  router.add('/:story/:substory?', (story, substory) => {
-    //redirect to first substory path
-    console.log(story, substory);
-  });
+document.querySelector('#stories-tree').innerHTML = storiesTreeTemplate({ stories });
 
-  router.add('/', () => {
-    //redirect to first story path
-    console.log('root route');
-  });
+router.add('/:story/:substory?', (story, substory) => {
+  $previewFrame.src = `/preview.html#${story}/${substory}`
+});
 
-  router.resolve();
-};
+router.add('/:story', (story) => {
+  //redirect to first substory path
+  console.log(`story ${story}`);
+});
+
+router.add('/', () => {
+  //redirect to first story path
+  console.log('root route');
+});
+
+router.resolve();
