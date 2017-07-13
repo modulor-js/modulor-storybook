@@ -1,6 +1,8 @@
 const Split = require('split.js');
 const { storyOf, getStories } = require('./story');
 
+const storiesTreeTemplate = require('../templates/stories_tree.html');
+
 const stories = getStories();
 
 if(inIframe()){
@@ -28,6 +30,8 @@ function managerApp(){
     gutterSize: 8,
     cursor: 'row-resize'
   });
+
+  document.querySelector('#stories-tree').innerHTML = storiesTreeTemplate({ stories });
 
 }
 

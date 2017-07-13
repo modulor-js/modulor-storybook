@@ -1,6 +1,6 @@
 module.exports = (scope) => `
   <div class="split split-horizontal left-panel">
-    <div class="split content"></div>
+    <div id="stories-tree" class="split content"></div>
   </div>
   <div class="split split-horizontal right-panel">
     <div id="preview-block" class="split content">
