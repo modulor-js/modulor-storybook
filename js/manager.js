@@ -1,25 +1,17 @@
 const Split = require('split.js');
 const { Delegate } = require('ascesis/delegate');
 const { Router } = require('ascesis/router');
-const { storyOf, getStories } = require('./story');
+const { getStories } = require('./story');
 
 const storiesTreeTemplate = require('../templates/stories_tree.html');
 
 const stories = getStories();
-const router = new Router({ useHash: true });
 
-if(inIframe()){
-  previewApp();
-} else {
-  managerApp();
-}
+module.exports = () => {
 
-function previewApp(){
-  console.log('preview app init', stories);
-}
-
-function managerApp(){
   console.log('manager app init', stories);
+
+  const router = new Router({ useHash: true });
 
   Split(['.left-panel', '.right-panel'], {
     sizes: [20, 80],
@@ -47,10 +39,4 @@ function managerApp(){
   });
 
   router.resolve();
-
-}
-
-function inIframe(){
-  return window.self !== window.top;
-}
-
+};

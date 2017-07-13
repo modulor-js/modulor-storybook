@@ -58,7 +58,7 @@ stories.then((storyFiles) => {
 
   const webpackConfigPrepared = Object.assign({}, webpackConfig, {
     entry: {
-      application: storyFiles.concat(path.resolve(PROJECT_DIR, 'js/manager.js'))
+      application: storyFiles.concat(path.resolve(PROJECT_DIR, 'js/application.js'))
     }
   });
 
