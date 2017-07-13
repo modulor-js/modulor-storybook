@@ -1,8 +1,16 @@
 module.exports = (scope) => `
-    <iframe src="/preview.html"></iframe>
-    <div id="root"></div>
-    ${scope.assets.filter(path => path.endsWith('.js'))
-                  .map(path => `<script src="${path}"></script>`)
-                  .join('\n')
-    }
+  <div class="split split-horizontal left-panel">
+    <div class="split content"></div>
+  </div>
+  <div class="split split-horizontal right-panel">
+    <div id="preview-block" class="split content">
+      <iframe id="preview-frame" src="/preview.html"></iframe>
+    </div>
+    <div id="info-block" class="split content"></div>
+  </div>
+
+  ${scope.assets.filter(path => path.endsWith('.js'))
+                .map(path => `<script src="${path}"></script>`)
+                .join('\n')
+  }
 `;

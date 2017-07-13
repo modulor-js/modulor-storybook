@@ -7,6 +7,7 @@ const fs = require('fs');
 
 const commonTemplate = require('./templates/common.html');
 const managerTemplate = require('./templates/manager.html');
+const managerHeadTemplate = require('./templates/manager_head.html');
 const previewTemplate = require('./templates/preview.html');
 
 const webpackMiddleware = require("webpack-dev-middleware");
@@ -82,9 +83,7 @@ function appMiddleware(req, res) {
   const assetsByChunkName = res.locals.webpackStats.toJson().assetsByChunkName;
 
   res.send(commonTemplate({
-    headContent: `
-      <title>Stories manager</title>
-    `,
+    headContent: managerHeadTemplate(),
     bodyContent: managerTemplate({
       assets: normalizeAssets(assetsByChunkName.application)
     })
