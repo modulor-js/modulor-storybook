@@ -1,9 +1,12 @@
 const Split = require('split.js');
+const { Delegate } = require('ascesis/delegate');
+const { Router } = require('ascesis/router');
 const { storyOf, getStories } = require('./story');
 
 const storiesTreeTemplate = require('../templates/stories_tree.html');
 
 const stories = getStories();
+const router = new Router({ useHash: true });
 
 if(inIframe()){
   previewApp();
@@ -32,6 +35,18 @@ function managerApp(){
   });
 
   document.querySelector('#stories-tree').innerHTML = storiesTreeTemplate({ stories });
+
+  router.add('/:story/:substory?', (story, substory) => {
+    //redirect to first substory path
+    console.log(story, substory);
+  });
+
+  router.add('/', () => {
+    //redirect to first story path
+    console.log('root route');
+  });
+
+  router.resolve();
 
 }
 

@@ -10,7 +10,7 @@ module.exports = (scope) => `
   </div>
 
   ${scope.assets.filter(path => path.endsWith('.js'))
-                .map(path => `<script src="${path}"></script>`)
+                .map(path => `<script src="/${path}"></script>`)
                 .join('\n')
   }
 `;

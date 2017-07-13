@@ -2,10 +2,12 @@ module.exports = (scope) => `
   <ul>
   ${Object.keys(scope.stories).map((storyName) => `
     <li>
-      ${storyName}
+      <a href="#${storyName}">${storyName}</a>
       <ul>
       ${Object.keys(scope.stories[storyName]).map((subStoryName) => `
-        <li>${subStoryName}</li>
+        <li>
+          <a href="#${storyName}/${subStoryName}">${subStoryName}</a>
+        </li>
       `).join('\n')}
       </ul>
     </li>
