@@ -5,9 +5,16 @@ module.exports = (() => {
     const chain = {
       add(name, fn){
         stories[name] = fn;
-        return chain;
+        return this;
       },
-      addDecorator(){}
+      addDecorator(){
+        return this;
+      },
+
+      //should be defined by plugins
+      info(){
+        return this;
+      }
     }
     return chain;
   }
