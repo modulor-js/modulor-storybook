@@ -5,6 +5,10 @@ const fileHound = require('filehound');
 const path = require('path');
 const fs = require('fs');
 
+const commonTemplate = require('./templates/common.html');
+const managerTemplate = require('./templates/manager.html');
+const previewTemplate = require('./templates/preview.html');
+
 const webpackMiddleware = require("webpack-dev-middleware");
 
 
@@ -75,57 +79,28 @@ function normalizeAssets(assets) {
 }
 
 function appMiddleware(req, res) {
-  const assetsByChunkName = res.locals.webpackStats.toJson().assetsByChunkName
+  const assetsByChunkName = res.locals.webpackStats.toJson().assetsByChunkName;
 
-  res.send(`
-    <html>
-      <head>
-        <title>My App</title>
-                    ${
-                            normalizeAssets(assetsByChunkName.application)
-                            .filter(path => path.endsWith('.css'))
-                            .map(path => `<link rel="stylesheet" href="${path}" />`)
-                            .join('\n')
-                    }
-      </head>
-      <body>
-        <iframe src="/preview.html"></iframe>
-        <div id="root"></div>
-                    ${
-                            normalizeAssets(assetsByChunkName.application)
-                            .filter(path => path.endsWith('.js'))
-                            .map(path => `<script src="${path}"></script>`)
-                            .join('\n')
-                    }
-      </body>
-    </html>
-  `);
+  res.send(commonTemplate({
+    headContent: `
+      <title>Stories manager</title>
+    `,
+    bodyContent: managerTemplate({
+      assets: normalizeAssets(assetsByChunkName.application)
+    })
+  }));
 }
 
 function previewMiddleware(req, res) {
-  const assetsByChunkName = res.locals.webpackStats.toJson().assetsByChunkName
+  const assetsByChunkName = res.locals.webpackStats.toJson().assetsByChunkName;
 
-  res.send(`
-    <html>
-      <head>
-        <title>My App</title>
-                    ${
-                            normalizeAssets(assetsByChunkName.application)
-                            .filter(path => path.endsWith('.css'))
-                            .map(path => `<link rel="stylesheet" href="${path}" />`)
-                            .join('\n')
-                    }
-      </head>
-      <body>
-        <div id="root"></div>
-                    ${
-                            normalizeAssets(assetsByChunkName.application)
-                            .filter(path => path.endsWith('.js'))
-                            .map(path => `<script src="${path}"></script>`)
-                            .join('\n')
-                    }
-      </body>
-    </html>
-  `);
+  res.send(commonTemplate({
+    headContent: `
+      <title>Story preview</title>
+    `,
+    bodyContent: previewTemplate({
+      assets: normalizeAssets(assetsByChunkName.application)
+    })
+  }));
 }
 
