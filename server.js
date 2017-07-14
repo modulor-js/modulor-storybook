@@ -76,7 +76,7 @@ Promise.all([
   const header = values[1];
   const additional = values[2];
 
-  const common = [].concat(additional, storyFiles);
+  const common = [].concat(additional || [], storyFiles);
 
   const webpackConfigPrepared = Object.assign({}, webpackConfig, {
     entry: {
@@ -89,8 +89,7 @@ Promise.all([
 
   app.use(webpackMiddleware(compiler, { serverSideRender: true }));
   app.use((req, res, next) => {
-    res.header = header;
-    res.additional = additional;
+    res.header = header || '';
     next();
   })
   app.get('/preview.html', previewMiddleware);
