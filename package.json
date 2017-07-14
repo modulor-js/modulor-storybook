@@ -1,8 +1,11 @@
 {
-  "name": "webcomponents-storybook",
+  "name": "ascesis-storybook",
   "version": "0.1.0",
   "description": "Storybook for WebComponents",
-  "main": "index.js",
+  "main": "./js/story.js",
+  "bin": {
+    "ascesis-storybook": "./server.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
