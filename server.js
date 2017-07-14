@@ -79,11 +79,17 @@ Promise.all([
 
   const common = [].concat(additional || [], storyFiles);
 
+  webpackConfig.resolve || (webpackConfig.resolve = {});
+  webpackConfig.resolve.modules || (webpackConfig.resolve.modules = []);
+  webpackConfig.resolve.modules.push(path.resolve(PROJECT_DIR, 'node_modules'));
+  webpackConfig.resolve.modules.push(path.resolve(TARGET_DIR, 'node_modules'));
+
   const webpackConfigPrepared = Object.assign({}, webpackConfig, {
     entry: {
       manager: common.concat(path.resolve(PROJECT_DIR, 'js/manager.js')),
       preview: common.concat(path.resolve(PROJECT_DIR, 'js/preview.js'))
-    }
+    },
+    resolve: webpackConfig.resolve
   });
 
   const compiler = webpack(webpackConfigPrepared);
