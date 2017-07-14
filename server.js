@@ -4,6 +4,7 @@ const program = require('commander');
 const fileHound = require('filehound');
 const path = require('path');
 const fs = require('fs');
+const pack = require('./package')
 
 const commonTemplate = require('./templates/common.html');
 const managerTemplate = require('./templates/manager.html');
@@ -15,7 +16,7 @@ const webpackMiddleware = require("webpack-dev-middleware");
 
 //read arguments
 program
-  .version('0.1.0')
+  .version(pack.version)
   .option('-p, --port <n>', 'Port')
   .parse(process.argv);
 

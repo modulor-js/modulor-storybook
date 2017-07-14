@@ -22,7 +22,7 @@ Split(['.left-panel', '.right-panel'], {
 
 Split(['#preview-block', '#info-block'], {
   direction: 'vertical',
-  sizes: [25, 75],
+  sizes: [75, 25],
   gutterSize: 8,
   cursor: 'row-resize'
 });
