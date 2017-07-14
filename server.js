@@ -120,8 +120,8 @@ function appMiddleware(req, res) {
   res.send(commonTemplate({
     headContent: managerHeadTemplate(),
     bodyContent: managerTemplate({
-      assets: normalizeAssets(assetsByChunkName.manager)
-    })
+                  assets: normalizeAssets(assetsByChunkName.manager)
+                })
   }));
 }
 
@@ -138,4 +138,3 @@ function previewMiddleware(req, res) {
     })
   }));
 }
-
