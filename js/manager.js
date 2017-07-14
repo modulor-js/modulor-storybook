@@ -10,6 +10,8 @@ const stories = getStories();
 const router = new Router({ useHash: true });
 
 const $previewFrame = document.querySelector('#preview-frame');
+const $fullscreenAnchor = document.querySelector('#fullscreen-anchor');
+
 const channel = new Channel($previewFrame.contentWindow);
 
 Split(['.left-panel', '.right-panel'], {
@@ -28,7 +30,10 @@ Split(['#preview-block', '#info-block'], {
 document.querySelector('#stories-tree').innerHTML = storiesTreeTemplate({ stories });
 
 router.add('/:story/:substory', (story, substory) => {
-  $previewFrame.src = `/preview.html#${story}/${substory}`
+  const url = `/preview.html#${story}/${substory}`;
+
+  $previewFrame.src = url;
+  $fullscreenAnchor.href = url;
 });
 
 router.add('/:story', (story) => {
@@ -42,4 +47,3 @@ router.add('/', () => {
 });
 
 router.resolve();
-
