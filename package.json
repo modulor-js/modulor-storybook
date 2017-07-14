@@ -1,7 +1,7 @@
 {
-  "name": "webpack_api",
-  "version": "1.0.0",
-  "description": "",
+  "name": "webcomponents-storybook",
+  "version": "0.1.0",
+  "description": "Storybook for WebComponents",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
