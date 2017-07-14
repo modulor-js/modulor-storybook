@@ -54,12 +54,21 @@ const stories = fileHound.create()
 
 
 
-stories.then((storyFiles) => {
+Promise.all([
+  stories,
+  fileHound.create().paths(TARGET_DIR).match('preview-header.html').find(),
+  fileHound.create().paths(TARGET_DIR).match('additional.js').find()
+]).then(values => {
+  const storyFiles = values[0];
+  const headers = values[1];
+  const additional = values[2];
+
+  const common = additional.concat(storyFiles);
 
   const webpackConfigPrepared = Object.assign({}, webpackConfig, {
     entry: {
-      manager: storyFiles.concat(path.resolve(PROJECT_DIR, 'js/manager.js')),
-      preview: storyFiles.concat(path.resolve(PROJECT_DIR, 'js/preview.js'))
+      manager: common.concat(path.resolve(PROJECT_DIR, 'js/manager.js')),
+      preview: common.concat(path.resolve(PROJECT_DIR, 'js/preview.js'))
     }
   });
 
@@ -70,7 +79,8 @@ stories.then((storyFiles) => {
   app.use(appMiddleware);
 
   app.listen(PORT, () => {
-    console.log(`App listening on port ${PORT}`);
+    console.log('Target Dir: ', TARGET_DIR);
+    console.log(`App listening on port ${PORT}\nOpen http://localhost:${PORT}/ on browser`);
   });
 
 });
