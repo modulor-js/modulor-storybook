@@ -19,7 +19,7 @@ module.exports = (() => {
     return chain;
   }
 
-  function storyOf(name){
+  function storiesOf(name){
     return generateChain(stories[name] || (stories[name] = {}));
   }
 
@@ -28,7 +28,7 @@ module.exports = (() => {
   }
 
   return {
-    storyOf, getStories
+    storiesOf, getStories
   }
 
 })();
