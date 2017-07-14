@@ -2,17 +2,15 @@ const Split = require('split.js');
 const { Delegate } = require('ascesis/delegate');
 const { Router } = require('ascesis/router');
 const { getStories } = require('./story');
+const Channel = require('./channel');
 
 const storiesTreeTemplate = require('../templates/stories_tree.html');
 
 const stories = getStories();
-
-
-console.log('manager app init', stories);
-
 const router = new Router({ useHash: true });
 
 const $previewFrame = document.querySelector('#preview-frame');
+const channel = new Channel($previewFrame.contentWindow);
 
 Split(['.left-panel', '.right-panel'], {
   sizes: [20, 80],
@@ -44,3 +42,4 @@ router.add('/', () => {
 });
 
 router.resolve();
+
