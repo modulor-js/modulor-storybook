@@ -52,18 +52,31 @@ const stories = fileHound.create()
   .match(config.storiesMask)
   .find();
 
-
+const readFile = file => {
+  return new Promise((resolve) => {
+    fs.readFile(file, 'utf8', (err, data) => {
+      if(err){
+        resolve(false);
+        return;
+      }
+      resolve(data.toString());
+    });
+  });
+}
+const checkFile = file => {
+  return readFile(file).then((content) => content ? file : false)
+}
 
 Promise.all([
   stories,
-  fileHound.create().paths(TARGET_DIR).match('preview-header.html').find(),
-  fileHound.create().paths(TARGET_DIR).match('additional.js').find()
+  readFile(path.resolve(TARGET_DIR, '.storybook', 'preview-header.html')),
+  checkFile(path.resolve(TARGET_DIR, '.storybook', 'additional.js'))
 ]).then(values => {
   const storyFiles = values[0];
-  const headers = values[1];
+  const header = values[1];
   const additional = values[2];
 
-  const common = additional.concat(storyFiles);
+  const common = [].concat(additional, storyFiles);
 
   const webpackConfigPrepared = Object.assign({}, webpackConfig, {
     entry: {
@@ -75,6 +88,11 @@ Promise.all([
   const compiler = webpack(webpackConfigPrepared);
 
   app.use(webpackMiddleware(compiler, { serverSideRender: true }));
+  app.use((req, res, next) => {
+    res.header = header;
+    res.additional = additional;
+    next();
+  })
   app.get('/preview.html', previewMiddleware);
   app.use(appMiddleware);
 
@@ -107,6 +125,7 @@ function previewMiddleware(req, res) {
   res.send(commonTemplate({
     headContent: `
       <title>Story preview</title>
+      ${res.header}
     `,
     bodyContent: previewTemplate({
       assets: normalizeAssets(assetsByChunkName.preview)
