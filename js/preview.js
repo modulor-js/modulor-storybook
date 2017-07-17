@@ -14,7 +14,7 @@ const $container = document.querySelector('#container');
 router.add('/:story/:substory?', (story, substory) => {
   //redirect to first substory path
   console.log('preview', story, substory);
-  $container.innerHTML = (stories[story][substory] || (() => ``))()
+  $container.innerHTML = stories[story].renderStory(substory);
 });
 
 router.resolve();

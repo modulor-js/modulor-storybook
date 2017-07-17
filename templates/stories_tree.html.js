@@ -4,7 +4,7 @@ module.exports = (scope) => `
     <li>
       <a href="#${storyName}">${storyName}</a>
       <ul>
-      ${Object.keys(scope.stories[storyName]).map((subStoryName) => `
+      ${Object.keys(scope.stories[storyName].getStories()).map((subStoryName) => `
         <li>
           <a href="#${storyName}/${subStoryName}">${subStoryName}</a>
         </li>
