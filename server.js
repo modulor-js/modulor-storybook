@@ -100,7 +100,7 @@ Promise.all([
   app.use((req, res, next) => {
     res.header = header || '';
     next();
-  })
+  });
   app.get('/preview.html', previewMiddleware);
   app.use(appMiddleware);
 

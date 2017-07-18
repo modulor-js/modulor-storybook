@@ -44,19 +44,28 @@ module.exports = (scope) => `
       margin-top: -4px;
       z-index: 50;
     }
+
+    sandbox-manager-application {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
   </style>
-  <div class="split split-horizontal left-panel">
-    <div id="stories-tree" class="split content"></div>
-  </div>
-  <div class="split split-horizontal right-panel">
-    <div id="preview-block" class="split content">
-      <a id="fullscreen-anchor" class="fullscreen-icon" href="" target="_blank">
-        <span class="arrows-overlap"></span>
-      </a>
-      <iframe id="preview-frame" src="/preview.html"></iframe>
+
+  <sandbox-manager-application>
+    <div class="split split-horizontal left-panel">
+      <div id="stories-tree" class="split content"></div>
     </div>
-    <div id="info-block" class="split content"></div>
-  </div>
+    <div class="split split-horizontal right-panel">
+      <div id="preview-block" class="split content">
+        <a id="fullscreen-anchor" class="fullscreen-icon" href="" target="_blank">
+          <span class="arrows-overlap"></span>
+        </a>
+        <iframe id="preview-frame" src="/preview.html"></iframe>
+      </div>
+      <div id="info-block" class="split content"></div>
+    </div>
+  </sandbox-manager-application>
 
   ${scope.assets.filter(path => path.endsWith('.js'))
                 .map(path => `<script src="/${path}"></script>`)

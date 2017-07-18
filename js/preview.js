@@ -7,15 +7,17 @@ const channel = new Channel(window.parent);
 const stories = getStories();
 
 
-const router = new Router({ useHash: true });
+class PreviewApp extends HTMLElement {
+  connectedCallback(){
+    const router = new Router({ useHash: true });
 
-const $container = document.querySelector('#container');
+    router.add('/:story/:substory?', (story, substory) => {
+      //redirect to first substory path
+      this.innerHTML = stories[story].renderStory(substory);
+    });
 
-router.add('/:story/:substory?', (story, substory) => {
-  //redirect to first substory path
-  console.log('preview', story, substory);
-  $container.innerHTML = stories[story].renderStory(substory);
-});
+    router.resolve();
+  }
+}
 
-router.resolve();
-
+customElements.define('sandbox-preview-application', PreviewApp);

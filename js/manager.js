@@ -6,44 +6,54 @@ const Channel = require('./channel');
 
 const storiesTreeTemplate = require('../templates/stories_tree.html');
 
-const stories = getStories();
-const router = new Router({ useHash: true });
 
-const $previewFrame = document.querySelector('#preview-frame');
-const $fullscreenAnchor = document.querySelector('#fullscreen-anchor');
+class ManagerApp extends HTMLElement {
 
-const channel = new Channel($previewFrame.contentWindow);
+  connectedCallback(){
 
-Split(['.left-panel', '.right-panel'], {
-  sizes: [20, 80],
-  gutterSize: 8,
-  cursor: 'col-resize'
-});
+    const stories = getStories();
+    const router = new Router({ useHash: true });
 
-Split(['#preview-block', '#info-block'], {
-  direction: 'vertical',
-  sizes: [75, 25],
-  gutterSize: 8,
-  cursor: 'row-resize'
-});
+    this.$previewFrame = this.querySelector('#preview-frame');
+    this.$fullscreenAnchor = this.querySelector('#fullscreen-anchor');
 
-document.querySelector('#stories-tree').innerHTML = storiesTreeTemplate({ stories });
+    const channel = new Channel(this.$previewFrame.contentWindow);
 
-router.add('/:story/:substory', (story, substory) => {
-  const url = `/preview.html#${story}/${substory}`;
+    Split(['.left-panel', '.right-panel'], {
+      sizes: [20, 80],
+      gutterSize: 8,
+      cursor: 'col-resize'
+    });
 
-  $previewFrame.src = url;
-  $fullscreenAnchor.href = url;
-});
+    Split(['#preview-block', '#info-block'], {
+      direction: 'vertical',
+      sizes: [75, 25],
+      gutterSize: 8,
+      cursor: 'row-resize'
+    });
 
-router.add('/:story', (story) => {
-  //redirect to first substory path
-  console.log(`story ${story}`);
-});
+    this.querySelector('#stories-tree').innerHTML = storiesTreeTemplate({ stories });
 
-router.add('/', () => {
-  //redirect to first story path
-  console.log('root route');
-});
+    router.add('/:story/:substory', (story, substory) => {
+      const url = `/preview.html#${story}/${substory}`;
 
-router.resolve();
+      this.$previewFrame.src = url;
+      this.$fullscreenAnchor.href = url;
+    });
+
+    router.add('/:story', (story) => {
+      //redirect to first substory path
+      console.log(`story ${story}`);
+    });
+
+    router.add('/', () => {
+      //redirect to first story path
+      console.log('root route');
+    });
+
+    router.resolve();
+
+  }
+}
+
+customElements.define('sandbox-manager-application', ManagerApp);
