@@ -1,6 +1,14 @@
 class AddonsApi {
   constructor(){
-    this.channel = { on() {}, emit() {} };
+    this.channel = {
+      on(){
+        console.log(`Can't subscribe on channel event. Channel is not ready yet`);
+      },
+      emit(){
+        console.log(`Can't emit channel event. Channel is not ready yet`);
+      }
+    };
+    this.panels = {};
   }
 
   getChannel() {
@@ -11,7 +19,12 @@ class AddonsApi {
     this.channel = channel;
   }
 
-  addPanel(){
+  addPanel(name, render){
+    this.panels[name] = { render };
+  }
+
+  getPanels(){
+    return this.panels;
   }
 }
 

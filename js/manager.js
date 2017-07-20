@@ -6,6 +6,7 @@ const Channel = require('./channel');
 const AddonsApi = require('./addons');
 
 const storiesTreeTemplate = require('../templates/stories_tree.html');
+const addonsPanelTemplate = require('../templates/addons_panel.html');
 
 
 class ManagerApp extends HTMLElement {
@@ -17,7 +18,6 @@ class ManagerApp extends HTMLElement {
 
     this.$previewFrame = this.querySelector('#preview-frame');
     this.$fullscreenAnchor = this.querySelector('#fullscreen-anchor');
-    this.$infoBlock = this.querySelector('#info-block');
 
     const channel = new Channel(this.$previewFrame.contentWindow);
     AddonsApi.setChannel(channel);
@@ -60,3 +60,12 @@ class ManagerApp extends HTMLElement {
 }
 
 customElements.define('sandbox-manager-application', ManagerApp);
+
+
+class AddonsPanel extends HTMLElement {
+  connectedCallback(){
+    this.innerHTML = addonsPanelTemplate({ panels: AddonsApi.getPanels() });
+  }
+}
+
+customElements.define('sandbox-addons-panel', AddonsPanel);

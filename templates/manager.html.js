@@ -63,7 +63,7 @@ module.exports = (scope) => `
         </a>
         <iframe name="preview-frame" id="preview-frame" src="/preview.html"></iframe>
       </div>
-      <div id="info-block" class="split content"></div>
+      <sandbox-addons-panel id="info-block" class="split content"></sandbox-addons-panel>
     </div>
   </sandbox-manager-application>
 
