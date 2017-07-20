@@ -9,6 +9,7 @@ class AddonsApi {
       }
     };
     this.panels = {};
+    this.onStoryListeners = [];
   }
 
   getChannel() {
@@ -25,6 +26,14 @@ class AddonsApi {
 
   getPanels(){
     return this.panels;
+  }
+
+  onStory(handler){
+    this.onStoryListeners.push(handler);
+  }
+
+  notifyOnStoryListeners(story, storyKind){
+    this.onStoryListeners.forEach((listener) => listener(story, storyKind));
   }
 }
 

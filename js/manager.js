@@ -42,6 +42,8 @@ class ManagerApp extends HTMLElement {
 
       this.$previewFrame.src = url;
       this.$fullscreenAnchor.href = url;
+
+      AddonsApi.notifyOnStoryListeners(story, substory);
     });
 
     router.add('/:story', (story) => {

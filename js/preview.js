@@ -16,6 +16,7 @@ class PreviewApp extends HTMLElement {
 
     router.add('/:story/:substory?', (story, substory) => {
       //redirect to first substory path
+      AddonsApi.notifyOnStoryListeners(story, substory);
       this.innerHTML = stories[story].renderStory(substory);
     });
 
