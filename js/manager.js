@@ -3,6 +3,7 @@ const { Delegate } = require('ascesis/delegate');
 const { Router } = require('ascesis/router');
 const { getStories } = require('./story');
 const Channel = require('./channel');
+const AddonsApi = require('./addons');
 
 const storiesTreeTemplate = require('../templates/stories_tree.html');
 
@@ -16,8 +17,10 @@ class ManagerApp extends HTMLElement {
 
     this.$previewFrame = this.querySelector('#preview-frame');
     this.$fullscreenAnchor = this.querySelector('#fullscreen-anchor');
+    this.$infoBlock = this.querySelector('#info-block');
 
     const channel = new Channel(this.$previewFrame.contentWindow);
+    AddonsApi.setChannel(channel);
 
     Split(['.left-panel', '.right-panel'], {
       sizes: [20, 80],

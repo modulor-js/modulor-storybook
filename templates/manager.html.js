@@ -61,7 +61,7 @@ module.exports = (scope) => `
         <a id="fullscreen-anchor" class="fullscreen-icon" href="" target="_blank">
           <span class="arrows-overlap"></span>
         </a>
-        <iframe id="preview-frame" src="/preview.html"></iframe>
+        <iframe name="preview-frame" id="preview-frame" src="/preview.html"></iframe>
       </div>
       <div id="info-block" class="split content"></div>
     </div>
