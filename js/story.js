@@ -45,8 +45,12 @@ module.exports = (() => {
     return stories;
   }
 
+  function getStory(story, storyKind){
+    return stories[story].getStory(storyKind);
+  }
+
   return {
-    storiesOf, getStories
+    storiesOf, getStories, getStory
   }
 
 })();

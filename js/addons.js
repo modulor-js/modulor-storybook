@@ -1,3 +1,5 @@
+const { getStory } = require('./story')
+
 class AddonsApi {
   constructor(){
     this.channel = {
@@ -34,6 +36,10 @@ class AddonsApi {
 
   notifyOnStoryListeners(story, storyKind){
     this.onStoryListeners.forEach((listener) => listener(story, storyKind));
+  }
+
+  getStory(story, storyKind){
+    return getStory(story, storyKind);
   }
 }
 
