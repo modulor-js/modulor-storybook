@@ -1,3 +1,6 @@
+inspired by [react storybook readme addon](https://github.com/tuchk4/storybook-readme)
+
+
 # usage
 
 ```js
