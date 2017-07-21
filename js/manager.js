@@ -1,4 +1,5 @@
 const Split = require('split.js');
+const { trigger } = require('ascesis');
 const { Delegate } = require('ascesis/delegate');
 const { Router } = require('ascesis/router');
 const { getStories } = require('./story');
@@ -9,6 +10,14 @@ const storiesTreeTemplate = require('../templates/stories_tree.html');
 const addonsPanelTemplate = require('../templates/addons_panel.html');
 
 
+class AddonsPanel extends HTMLElement {
+  render(){
+    this.innerHTML = addonsPanelTemplate({ panels: AddonsApi.getPanels() });
+  }
+}
+
+customElements.define('sandbox-addons-panel', AddonsPanel);
+
 class ManagerApp extends HTMLElement {
 
   connectedCallback(){
@@ -18,9 +27,12 @@ class ManagerApp extends HTMLElement {
 
     this.$previewFrame = this.querySelector('#preview-frame');
     this.$fullscreenAnchor = this.querySelector('#fullscreen-anchor');
+    this.$addonsPanel = this.querySelector('sandbox-addons-panel');
 
     const channel = new Channel(this.$previewFrame.contentWindow);
     AddonsApi.setChannel(channel);
+
+    this.$addonsPanel.render();
 
     Split(['.left-panel', '.right-panel'], {
       sizes: [20, 80],
@@ -64,10 +76,3 @@ class ManagerApp extends HTMLElement {
 customElements.define('sandbox-manager-application', ManagerApp);
 
 
-class AddonsPanel extends HTMLElement {
-  connectedCallback(){
-    this.innerHTML = addonsPanelTemplate({ panels: AddonsApi.getPanels() });
-  }
-}
-
-customElements.define('sandbox-addons-panel', AddonsPanel);
