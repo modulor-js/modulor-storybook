@@ -1,4 +1,4 @@
-const AddonsApi = require('../js/addons');
+const AddonsApi = require('../../js/addons');
 
 
 customElements.define('readme-manager', class extends HTMLElement {
@@ -15,9 +15,9 @@ customElements.define('readme-manager', class extends HTMLElement {
 AddonsApi.addPanel('README', () => `<readme-manager></readme-manager>`);
 
 function withReadme(readme, render){
-  return () => {
+  return (story) => {
     AddonsApi.getChannel().emit('plugin-readme', readme);
-    return render();
+    return (render || story)();
   }
 }
 

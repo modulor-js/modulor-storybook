@@ -1,7 +1,7 @@
 # ascesis-storybook
 Work in progress
 
-## Plugins api
+## Addons api
 
 ### Usage
 
@@ -24,5 +24,11 @@ customElements.define('your-custom-tag', class extends HTMLElement {
 });
 ```
 
-### Plugins API
+### Addons API
 [check implementation](./js/addons.js)
+
+
+### Examples
+
+[README plugin](./addons/readme)
+
