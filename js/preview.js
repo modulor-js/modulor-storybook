@@ -1,21 +1,27 @@
 const { Delegate } = require('ascesis/delegate');
 const { Router } = require('ascesis/router');
 const { getStories } = require('./story');
+const AddonsApi = require('./addons');
 const Channel = require('./channel');
 
-const channel = new Channel(window.parent);
 const stories = getStories();
 
 
-const router = new Router({ useHash: true });
+class PreviewApp extends HTMLElement {
+  connectedCallback(){
+    const channel = new Channel(window.parent);
+    AddonsApi.setChannel(channel);
 
-const $container = document.querySelector('#container');
+    const router = new Router({ useHash: true });
 
-router.add('/:story/:substory?', (story, substory) => {
-  //redirect to first substory path
-  console.log('preview', story, substory);
-  $container.innerHTML = stories[story].renderStory(substory);
-});
+    router.add('/:story/:substory?', (story, substory) => {
+      //redirect to first substory path
+      AddonsApi.notifyOnStoryListeners(story, substory);
+      this.innerHTML = stories[story].renderStory(substory);
+    });
 
-router.resolve();
+    router.resolve();
+  }
+}
 
+customElements.define('sandbox-preview-application', PreviewApp);
