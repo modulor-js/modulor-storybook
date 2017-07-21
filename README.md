@@ -6,7 +6,7 @@ Work in progress
 ### Usage
 
 ```js
-const AddonsApi = require('ascesis-storybook/js/addons');
+const AddonsApi = require('ascesis-storybook/addons');
 
 //define manager plugin
 customElements.define('your-custom-tag', class extends HTMLElement {
