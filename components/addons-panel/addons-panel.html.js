@@ -38,7 +38,7 @@ module.exports = (scope) => `
   <div class="panels-header">
     ${Object.keys(scope.panels).map((key, index) => `
       <label>
-        <input name="addons-panel-tab" class="addons-panel-tab" type="radio" ${!index ? 'checked': ''}>
+        <input panel="${key}" name="addons-panel-tab" class="addons-panel-tab" type="radio" ${!index ? 'checked': ''}>
         <span class="addons-panel-label">${key}</span>
         <div class="addons-panel-content" data-index=${index}>
           ${scope.panels[key].render()}
