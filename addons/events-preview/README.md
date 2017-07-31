@@ -1,1 +1,0 @@
-# Events preview addon
