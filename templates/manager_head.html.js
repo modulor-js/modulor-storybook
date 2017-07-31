@@ -53,48 +53,6 @@ module.exports = () => `
       float: left;
     }
 
-    #preview-frame {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-    #stories-tree ul a {
-      text-decoration: none;
-      padding: 4px 0;
-      display: block;
-    }
-    #stories-tree ul a:hover {
-      background: #eee;
-    }
-    #stories-tree ul a:click {
-      background: #ddd;
-    }
-    #stories-tree ul {
-      list-style: none;
-    }
-    #stories-tree > ul {
-      padding-left: 15px;
-    }
-    #stories-tree > ul > li {
-      font-size: 1.2em;
-      margin: 10px 0;
-      border-bottom: 1px solid #ccc;
-    }
-    #stories-tree > ul > li li:last-child {
-      border: 0;
-    }
-    #stories-tree > ul ul {
-      padding: 0;
-      margin-bottom: 0;
-      padding-left: 5px;
-    }
-    #stories-tree > ul ul li {
-      font-size: 0.8em;
-      border-bottom: 1px solid #dedede;
-    }
-    #stories-tree > ul li li a {
-      padding-left: 4px;
-    }
+
   </style>
 `
