@@ -3,7 +3,7 @@
 const express = require('express');
 const webpack = require("webpack");
 const program = require('commander');
-const fileHound = require('filehound');
+const glob = require('glob-promise');
 const path = require('path');
 const fs = require('fs');
 const pack = require('./package')
@@ -35,7 +35,9 @@ try {
 } catch(e) {
 }
 
-const config = Object.assign({}, require('./defaults/config.js'), projectConfig);
+const defaultConfig = require('./defaults/config.js');
+
+const config = Object.assign({}, defaultConfig, projectConfig);
 
 
 let webpackConfig = {};
@@ -49,11 +51,9 @@ try {
 
 //app
 const app = express();
-
-const stories = fileHound.create()
-  .paths(TARGET_DIR)
-  .match(config.storiesMask)
-  .find();
+const stories = glob(config.stories, {
+  ignore: config.ignore
+});
 
 const readFile = file => {
   return new Promise((resolve) => {
@@ -106,6 +106,7 @@ Promise.all([
 
   app.listen(PORT, () => {
     console.log('Target Dir: ', TARGET_DIR);
+    console.log(`Found ${storyFiles.length} Stories`);
     console.log(`App listening on port ${PORT}\nOpen http://localhost:${PORT}/ on browser`);
   });
 
