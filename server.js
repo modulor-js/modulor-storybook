@@ -91,12 +91,15 @@ Promise.all([
       manager: common.concat(path.resolve(PROJECT_DIR, 'js/manager.js')),
       preview: common.concat(path.resolve(PROJECT_DIR, 'js/preview.js'))
     },
-    resolve: webpackConfig.resolve
+    resolve: webpackConfig.resolve,
   });
 
   const compiler = webpack(webpackConfigPrepared);
 
-  app.use(webpackMiddleware(compiler, { serverSideRender: true }));
+  app.use(webpackMiddleware(compiler, {
+    serverSideRender: true,
+    stats: 'minimal'
+  }));
   app.use((req, res, next) => {
     res.header = header || '';
     next();
