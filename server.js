@@ -75,7 +75,7 @@ Promise.all([
   readFile(path.resolve(TARGET_DIR, '.storybook', 'preview-header.html')),
   checkFile(path.resolve(TARGET_DIR, '.storybook', 'additional.js'))
 ]).then(values => {
-  const storyFiles = values[0];
+  const storyFiles = values[0].map(file => path.resolve(TARGET_DIR, path.resolve(TARGET_DIR, file)));
   const header = values[1];
   const additional = values[2];
 
