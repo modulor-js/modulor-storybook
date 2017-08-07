@@ -1,3 +1,4 @@
 module.exports = {
-  storiesMask: '*.story.js'
-}
+  stories: '**/*.story.js',
+  ignore: 'node_modules/**/*',
+};
