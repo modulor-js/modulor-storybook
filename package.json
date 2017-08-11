@@ -1,6 +1,6 @@
 {
   "name": "ascesis-storybook",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Storybook for WebComponents",
   "main": "./js/story.js",
   "repository": "git@github.com:holidaypirates/ascesis-storybook.git",
