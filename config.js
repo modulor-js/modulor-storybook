@@ -5,6 +5,7 @@ const PROJECT_DIR = __dirname;
 
 const defaultStoriesConfig = {
   storybookDir: '.storybook',
+  webpackConfig: 'webpack.config.js',
   storiesMask: '**/*.story.js',
   ignore: 'node_modules/**/*',
   setupFile: 'additional.js',
@@ -21,17 +22,20 @@ Object.keys(customStoriesConfig).forEach((key) => {
 
 const storiesConfig = Object.assign({}, defaultStoriesConfig, customStoriesConfig);
 
+const STORYBOOK_DIR = path.resolve(TARGET_DIR, storiesConfig.storybookDir);
 
 module.exports = {
   stories: storiesConfig,
   paths: {
     TARGET_DIR: TARGET_DIR,
     PROJECT_DIR: PROJECT_DIR,
+    STORYBOOK_DIR: STORYBOOK_DIR,
 
     TARGET_NODE_MODULES: path.resolve(TARGET_DIR, 'node_modules'),
     PROJECT_NODE_MODULES: path.resolve(PROJECT_DIR, 'node_modules'),
 
-    WEBPACK: path.resolve(TARGET_DIR, storiesConfig.storybookDir, 'webpack.config.js'),
+    CUSTOM_WEBPACK_CONFIG: path.resolve(TARGET_DIR, storiesConfig.storybookDir, storiesConfig.webpackConfig),
+    DEFAULT_WEBPACK_CONFIG: path.resolve(PROJECT_DIR, 'defaults/webpack.config.js'),
 
     CUSTOM_PREVIEW_HEADER: path.resolve(TARGET_DIR, storiesConfig.storybookDir, storiesConfig.previewHeader),
 

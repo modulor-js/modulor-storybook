@@ -5,7 +5,8 @@
   "main": "./js/story.js",
   "repository": "git@github.com:holidaypirates/ascesis-storybook.git",
   "bin": {
-    "ascesis-storybook": "./server.js"
+    "ascesis-storybook": "./server.js",
+    "build-storybook": "./build_storybook.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

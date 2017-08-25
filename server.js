@@ -6,14 +6,12 @@ const program = require('commander');
 const pack = require('./package');
 
 const customFs = require('./lib/fs');
-const { CUSTOM_PREVIEW_HEADER } = require('./config').paths;
-
 const getWebpackConfig = require('./lib/get_webpack_config');
 
-const commonTemplate = require('./templates/common.html');
-const managerTemplate = require('./templates/manager.html');
-const managerHeadTemplate = require('./templates/manager_head.html');
-const previewTemplate = require('./templates/preview.html');
+const { CUSTOM_PREVIEW_HEADER } = require('./config').paths;
+
+const managerPageTemplate = require('./templates/manager_page.html');
+const previewPageTemplate = require('./templates/preview_page.html');
 
 const webpackMiddleware = require("webpack-dev-middleware");
 
@@ -36,49 +34,44 @@ Promise.all([
   customFs.readFile(CUSTOM_PREVIEW_HEADER),
   getWebpackConfig()
 ]).then(([header, webpackConfig]) => {
+
   const compiler = webpack(webpackConfig);
+
   app.use(webpackMiddleware(compiler, {
     serverSideRender: true,
     stats: 'minimal'
   }));
+
   app.use((req, res, next) => {
     res.header = header || '';
     next();
   });
+
   app.get('/preview.html', previewMiddleware);
+
   app.use(appMiddleware);
 
   app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}\nOpen http://localhost:${PORT}/ on browser`);
   });
+
 }).catch(console.log);
 
 
-function normalizeAssets(assets) {
-  return [].concat(assets || []);
-}
-
 function appMiddleware(req, res) {
-  const assetsByChunkName = res.locals.webpackStats.toJson().assetsByChunkName;
+  const stats = assetsByChunkName = res.locals.webpackStats.toJson();
 
-  res.send(commonTemplate({
-    headContent: managerHeadTemplate(),
-    bodyContent: managerTemplate({
-                  assets: normalizeAssets(assetsByChunkName.manager)
-                })
+  res.send(managerPageTemplate({
+    assets: [`${stats.publicPath}${stats.assetsByChunkName.manager}`],
   }));
 }
 
 function previewMiddleware(req, res) {
-  const assetsByChunkName = res.locals.webpackStats.toJson().assetsByChunkName;
+  const stats = assetsByChunkName = res.locals.webpackStats.toJson();
 
-  res.send(commonTemplate({
-    headContent: `
-      <title>Story preview</title>
-      ${res.header}
-    `,
-    bodyContent: previewTemplate({
-      assets: normalizeAssets(assetsByChunkName.preview)
-    })
+  res.send(previewPageTemplate({
+    assets: [`${stats.publicPath}${stats.assetsByChunkName.preview}`],
+    header: res.header
   }));
+
 }
