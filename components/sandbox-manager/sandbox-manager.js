@@ -43,7 +43,9 @@ class ManagerApp extends HTMLElement {
       addon: Object.keys(addonPanels)[0]
     };
 
-    this.router = new Router();
+    this.router = new Router({
+      base: window.location.pathname
+    });
 
     this.state = Object.assign({}, DEFAULT_PARAMS, this.router.getParams());
 
@@ -62,7 +64,8 @@ class ManagerApp extends HTMLElement {
     this.$rightPanel = this.querySelector('#right-panel');
 
     this.$rightPanel.appendChild(this.$previewFrame = createElement('preview-frame', {
-      'class': 'split content'
+      'class': 'split content',
+      'url-base': this.router.options.base
     }));
 
     this.$previewFrame.render();
