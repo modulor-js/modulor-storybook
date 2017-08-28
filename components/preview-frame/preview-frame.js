@@ -7,12 +7,17 @@ class PreviewFrame extends HTMLElement {
     return this.$previewFrame.contentWindow;
   }
   setActive(story, storyKind){
-    const url = `/preview.html?story=${story}&storyKind=${storyKind}`;
+    const url = `${this.urlBase}preview.html?story=${story}&storyKind=${storyKind}`;
 
     this.getWindow().location.replace(url);
 
     this.$fullscreenAnchor.href = url;
   }
+
+  get urlBase(){
+    return this.getAttribute('url-base') || '/';
+  }
+
   render(){
     this.innerHTML = template();
 

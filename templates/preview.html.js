@@ -17,7 +17,7 @@ module.exports = (scope) => `
 
     <sandbox-preview-application id="container"></sandbox-preview-application>
     ${scope.assets.filter(path => path.endsWith('.js'))
-                  .map(path => `<script src="/${path}"></script>`)
+                  .map(path => `<script src="${path}"></script>`)
                   .join('\n')
     }
 `;
