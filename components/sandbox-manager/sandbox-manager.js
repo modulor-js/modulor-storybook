@@ -16,19 +16,17 @@ require('../preview-frame/preview-frame');
 const createElement = (name, attributes) => {
   const $el = document.createElement(name);
   Object.keys(attributes).forEach((attr) => {
-    if(attr in $el){
+    if (attr in $el) {
       $el[attr] = attributes[attr];
     } else {
       $el.setAttribute(attr, attributes[attr]);
     }
   });
   return $el;
-}
+};
 
 class ManagerApp extends HTMLElement {
-
-  connectedCallback(){
-
+  connectedCallback() {
     this.innerHTML = template();
 
     const stories = getStories();
@@ -40,21 +38,21 @@ class ManagerApp extends HTMLElement {
       height: 75,
       story: firstStory.storyName,
       storyKind: Object.keys(firstStory.getStories())[0],
-      addon: Object.keys(addonPanels)[0]
+      addon: Object.keys(addonPanels)[0],
     };
 
     this.router = new Router({
-      base: window.location.pathname
+      base: window.location.pathname,
     });
 
     this.state = Object.assign({}, DEFAULT_PARAMS, this.router.getParams());
 
-    //build panels
+    // build panels
     this.$leftPanel = this.querySelector('#left-panel');
 
     this.$leftPanel.appendChild(this.$storiesStree = createElement('stories-tree', {
-      'class': 'split content',
-      'state': stories
+      class: 'split content',
+      state: stories,
     }));
 
     /*  build right panels
@@ -64,8 +62,8 @@ class ManagerApp extends HTMLElement {
     this.$rightPanel = this.querySelector('#right-panel');
 
     this.$rightPanel.appendChild(this.$previewFrame = createElement('preview-frame', {
-      'class': 'split content',
-      'url-base': this.router.options.base
+      class: 'split content',
+      'url-base': this.router.options.base,
     }));
 
     this.$previewFrame.render();
@@ -74,12 +72,12 @@ class ManagerApp extends HTMLElement {
 
 
     this.$rightPanel.appendChild(this.$addonsPanel = createElement('sandbox-addons-panel', {
-      'class': 'split content',
-      'state': addonPanels
+      class: 'split content',
+      state: addonPanels,
     }));
 
 
-    //resizable grid
+    // resizable grid
     const _self = this;
 
     const vSplit = Split([this.$leftPanel, this.$rightPanel], {
@@ -88,7 +86,7 @@ class ManagerApp extends HTMLElement {
       onDragEnd() {
         const width = Math.round(vSplit.getSizes()[1]);
         fireEvent('size-changed', _self, { width });
-      }
+      },
     });
 
     const hSplit = Split([this.$previewFrame, this.$addonsPanel], {
@@ -98,11 +96,11 @@ class ManagerApp extends HTMLElement {
       onDragEnd() {
         const height = Math.round(hSplit.getSizes()[0]);
         fireEvent('size-changed', _self, { height });
-      }
+      },
     });
 
 
-    //handle state change
+    // handle state change
     delegate.on('size-changed', this, null, this.updateState.bind(this));
     delegate.on('addon-changed', this, null, this.updateState.bind(this));
     delegate.on('story-changed', this, null, this.updateState.bind(this));
@@ -117,40 +115,37 @@ class ManagerApp extends HTMLElement {
      *  only query parameters will be used
      * */
     this.router.add('*', (path, query) => {
-
-      //set sizes
+      // set sizes
       const width = Number(query.width);
       const height = Number(query.height);
       vSplit.setSizes([100 - width, width]);
       hSplit.setSizes([height, 100 - height]);
 
-      //set active addons panel
+      // set active addons panel
       this.$addonsPanel.setActive(query.addon);
 
-      //set active story in stories tree
+      // set active story in stories tree
       this.$storiesStree.setActive(query.story, query.storyKind);
 
       this.renderStory(query.story, query.storyKind);
     });
 
-    //initial update of paramters + router resolve
+    // initial update of paramters + router resolve
     this.router.updateParams(this.state, { replace: true });
   }
 
-  //render active story in frame + notify onStory listeners
-  renderStory(story, storyKind){
+  // render active story in frame + notify onStory listeners
+  renderStory(story, storyKind) {
     this.$previewFrame.setActive(story, storyKind);
 
     AddonsApi.notifyOnStoryListeners(story, storyKind);
   }
 
-  //update manager state + silent update of query paramters
-  updateState({ eventData }){
+  // update manager state + silent update of query paramters
+  updateState({ eventData }) {
     this.state = Object.assign({}, this.state, eventData);
     this.router.updateParams(this.state, { silent: true });
   }
 }
 
 customElements.define('sandbox-manager-application', ManagerApp);
-
-

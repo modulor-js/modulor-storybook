@@ -1,9 +1,7 @@
 module.exports = () => `
 
   <title>Stories manager</title>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
-
   <style>
     html, body {
       height: 100%;
@@ -32,27 +30,21 @@ module.exports = () => `
       height: 100%;
       width: 100%;
     }
-
     .gutter {
       background-color: transparent;
 
       background-repeat: no-repeat;
       background-position: 50%;
     }
-
     .gutter.gutter-horizontal {
       cursor: col-resize;
     }
-
     .gutter.gutter-vertical {
       cursor: row-resize;
     }
-
     .split.split-horizontal, .gutter.gutter-horizontal {
       height: 100%;
       float: left;
     }
-
-
   </style>
-`
+`;
