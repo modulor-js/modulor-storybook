@@ -1,4 +1,4 @@
-module.exports = (scope) => `
+module.exports = () => `
   <style>
     .fullscreen-icon,
     .arrows-overlap {
