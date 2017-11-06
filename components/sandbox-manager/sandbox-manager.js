@@ -28,7 +28,13 @@ const createElement = (name, attributes) => {
 
 class ManagerApp extends HTMLElement {
   connectedCallback() {
-    this.innerHTML = template();
+    this.mobile = this.hasAttribute('mobile');
+    this.innerHTML = template({
+      mobile: this.mobile,
+    });
+    if (this.mobile) {
+      document.body.classList.add('mobile');
+    }
     this.branding = JSON.parse(this.getAttribute('branding') || '{}');
     const stories = getStories();
     const firstStory = stories[Object.keys(stories)[0]];
@@ -56,7 +62,7 @@ class ManagerApp extends HTMLElement {
       state: stories,
     });
     const leftPanelContainer = createElement('div', {
-      class: 'split content tree-container',
+      class: `${this.mobile ? '' : 'split content'} tree-container`,
     });
     leftPanelContainer.innerHTML = `<storybook-branding
       name="${this.branding.name}"
@@ -71,7 +77,7 @@ class ManagerApp extends HTMLElement {
     this.$rightPanel = this.querySelector('#right-panel');
 
     this.$rightPanel.appendChild(this.$previewFrame = createElement('preview-frame', {
-      class: 'split content',
+      class: `${this.mobile ? '' : 'split'} content`,
       'url-base': this.router.options.base,
     }));
 
@@ -81,33 +87,11 @@ class ManagerApp extends HTMLElement {
 
 
     this.$rightPanel.appendChild(this.$addonsPanel = createElement('sandbox-addons-panel', {
-      class: 'split content',
+      class: `${this.mobile ? '' : 'split'} content`,
       state: addonPanels,
     }));
 
-
-    // resizable grid
-    const _self = this;
-
-    const vSplit = Split([this.$leftPanel, this.$rightPanel], {
-      gutterSize: 8,
-      cursor: 'col-resize',
-      onDragEnd() {
-        const width = Math.round(vSplit.getSizes()[1]);
-        fireEvent('size-changed', _self, { width });
-      },
-    });
-
-    const hSplit = Split([this.$previewFrame, this.$addonsPanel], {
-      direction: 'vertical',
-      gutterSize: 8,
-      cursor: 'row-resize',
-      onDragEnd() {
-        const height = Math.round(hSplit.getSizes()[0]);
-        fireEvent('size-changed', _self, { height });
-      },
-    });
-
+    this.splitPanes();
 
     // handle state change
     delegate.on('size-changed', this, null, this.updateState.bind(this));
@@ -124,11 +108,13 @@ class ManagerApp extends HTMLElement {
      *  only query parameters will be used
      * */
     this.router.add('*', (path, query) => {
-      // set sizes
-      const width = Number(query.width);
-      const height = Number(query.height);
-      vSplit.setSizes([100 - width, width]);
-      hSplit.setSizes([height, 100 - height]);
+      if (!this.mobile) {
+        // set sizes
+        const width = Number(query.width);
+        const height = Number(query.height);
+        this.vSplit.setSizes([100 - width, width]);
+        this.hSplit.setSizes([height, 100 - height]);
+      }
 
       // set active addons panel
       this.$addonsPanel.setActive(query.addon);
@@ -141,6 +127,33 @@ class ManagerApp extends HTMLElement {
 
     // initial update of paramters + router resolve
     this.router.updateParams(this.state, { replace: true });
+  }
+
+  splitPanes() {
+    if (this.mobile) {
+      return;
+    }
+    // resizable grid
+    const _self = this;
+
+    this.vSplit = Split([this.$leftPanel, this.$rightPanel], {
+      gutterSize: 8,
+      cursor: 'col-resize',
+      onDragEnd() {
+        const width = Math.round(_self.vSplit.getSizes()[1]);
+        fireEvent('size-changed', _self, { width });
+      },
+    });
+
+    this.hSplit = Split([this.$previewFrame, this.$addonsPanel], {
+      direction: 'vertical',
+      gutterSize: 8,
+      cursor: 'row-resize',
+      onDragEnd() {
+        const height = Math.round(_self.hSplit.getSizes()[0]);
+        fireEvent('size-changed', _self, { height });
+      },
+    });
   }
 
   // render active story in frame + notify onStory listeners

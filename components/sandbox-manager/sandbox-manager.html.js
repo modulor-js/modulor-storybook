@@ -1,4 +1,4 @@
-module.exports = () => `
+module.exports = scope => `
   <style>
 
     sandbox-manager-application {
@@ -42,8 +42,8 @@ module.exports = () => `
     }
   </style>
 
-  <div id="left-panel" class="split split-horizontal left-panel">
+  <div id="left-panel" class="${scope.mobile ? '' : 'split split-horizontal'} left-panel">
   </div>
-  <div id="right-panel" class="split split-horizontal right-panel">
+  <div id="right-panel" class="${scope.mobile ? '' : 'split split-horizontal'} right-panel">
   </div>
 `;

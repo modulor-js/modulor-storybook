@@ -1,6 +1,6 @@
 module.exports = scope => `
 
-  <sandbox-manager-application branding='${JSON.stringify(scope.branding || {})}'></sandbox-manager-application>
+  <sandbox-manager-application mobile branding='${JSON.stringify(scope.branding || {})}'></sandbox-manager-application>
 
   ${scope.assets
     .filter(path => path.endsWith('.js'))
