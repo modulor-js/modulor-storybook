@@ -4,6 +4,14 @@ const TARGET_DIR = process.cwd();
 const PROJECT_DIR = __dirname;
 
 const defaultStoriesConfig = {
+  branding: {
+    name: 'Storybook',
+    icon: {
+      type: 'image/x-icon',
+      url: '//www.iconsdb.com/icons/download/black/square-dashed-16.ico',
+    },
+    logo: false,
+  },
   storybookDir: '.storybook',
   webpackConfig: 'webpack.config.js',
   storiesMask: '**/*.story.js',

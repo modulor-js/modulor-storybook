@@ -1,6 +1,7 @@
-module.exports = () => `
+const config = require('../config');
 
-  <title>Stories manager</title>
+module.exports = () => `
+  <title>${config.stories.branding.name}</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
   <style>
     html, body {

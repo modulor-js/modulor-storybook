@@ -1,5 +1,4 @@
-module.exports = (scope) => `
-
+module.exports = scope => `
   <style>
     #preview-frame {
       display: block;

@@ -11,6 +11,7 @@ const template = require('./sandbox-manager.html');
 require('../addons-panel/addons-panel');
 require('../stories-tree/stories-tree');
 require('../preview-frame/preview-frame');
+require('../storybook-branding/storybook-branding');
 
 
 const createElement = (name, attributes) => {
@@ -28,7 +29,7 @@ const createElement = (name, attributes) => {
 class ManagerApp extends HTMLElement {
   connectedCallback() {
     this.innerHTML = template();
-
+    this.branding = JSON.parse(this.getAttribute('branding') || '{}');
     const stories = getStories();
     const firstStory = stories[Object.keys(stories)[0]];
     const addonPanels = AddonsApi.getPanels();
@@ -50,10 +51,18 @@ class ManagerApp extends HTMLElement {
     // build panels
     this.$leftPanel = this.querySelector('#left-panel');
 
-    this.$leftPanel.appendChild(this.$storiesStree = createElement('stories-tree', {
-      class: 'split content',
+    this.$storiesStree = createElement('stories-tree', {
+      class: 'tree',
       state: stories,
-    }));
+    });
+    const leftPanelContainer = createElement('div', {
+      class: 'split content tree-container',
+    });
+    leftPanelContainer.innerHTML = `<storybook-branding
+      name="${this.branding.name}"
+      logo="${this.branding.logo}"></storybook-branding>`;
+    leftPanelContainer.appendChild(this.$storiesStree);
+    this.$leftPanel.appendChild(leftPanelContainer);
 
     /*  build right panels
      *  correct order of components creation matters a lot here

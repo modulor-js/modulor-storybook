@@ -9,7 +9,7 @@
     "build-storybook": "./build_storybook.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "storybook": "node ./server.js"
   },
   "author": "",
   "license": "ISC",

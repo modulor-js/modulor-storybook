@@ -1,8 +1,12 @@
-module.exports = (scope) => `
+module.exports = scope => `
   <style>
+    stories-tree {
+      display: block;
+      padding: 0 0 0 5px;
+    }
     stories-tree ul a {
       text-decoration: none;
-      padding: 4px 0;
+      padding: 5px;
       display: block;
     }
     stories-tree ul a:hover {
@@ -15,7 +19,8 @@ module.exports = (scope) => `
       list-style: none;
     }
     stories-tree > ul {
-      padding-left: 15px;
+      padding: 0;
+      margin: 0;
     }
     stories-tree > ul > li {
       font-size: 1.2em;
@@ -59,7 +64,7 @@ module.exports = (scope) => `
       </label>
       <input type="radio" name="story" story="${story}" id="story-${index}"/>
       <ul>
-      ${Object.keys(scope.stories[story].getStories()).map((storyKind) => `
+      ${Object.keys(scope.stories[story].getStories()).map(storyKind => `
         <li story-kind="${storyKind}">
           <label>
             <input story-kind="${storyKind}" name="storyKind" type="radio"/>

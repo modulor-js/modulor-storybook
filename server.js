@@ -7,6 +7,7 @@ const pack = require('./package');
 
 const customFs = require('./lib/fs');
 const getWebpackConfig = require('./lib/get_webpack_config');
+const config = require('./config');
 
 const { CUSTOM_PREVIEW_HEADER, MIDDLEWARES_FILE } = require('./config').paths;
 
@@ -79,6 +80,7 @@ function appMiddleware(req, res) {
 
   res.send(managerPageTemplate({
     assets: [].concat(stats.assetsByChunkName.manager).map(asset => `${stats.publicPath}${asset}`),
+    branding: config.stories.branding,
   }));
 }
 
