@@ -1,5 +1,5 @@
-const { delegate } = require('ascesis/delegate');
-const { fireEvent } = require('ascesis');
+const { delegate } = require('modulor/delegate');
+const { fireEvent } = require('modulor');
 const addonsPanelTemplate = require('./addons-panel.html');
 
 class AddonsPanel extends HTMLElement {

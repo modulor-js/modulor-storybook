@@ -1,11 +1,11 @@
 {
-  "name": "ascesis-storybook",
+  "name": "modulor-storybook",
   "version": "0.1.1",
   "description": "Storybook for WebComponents",
   "main": "./js/story.js",
-  "repository": "git@github.com:holidaypirates/ascesis-storybook.git",
+  "repository": "git@github.com:holidaypirates/modulor-storybook.git",
   "bin": {
-    "ascesis-storybook": "./server.js",
+    "modulor-storybook": "./server.js",
     "build-storybook": "./build_storybook.js"
   },
   "scripts": {
@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ascesis": "git+https://github.com/holidaypirates/ascesis.git",
+    "modulor": "git+https://github.com/holidaypirates/modulor.git",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",

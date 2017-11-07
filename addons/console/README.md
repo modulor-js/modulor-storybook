@@ -1,7 +1,7 @@
 # usage
 
 ```js
-const {withConsole} = require('ascesis-storybook/addons/console');
+const {withConsole} = require('modulor-storybook/addons/console');
 
 // console mocking for certain storykind
 storiesOf('mystory')

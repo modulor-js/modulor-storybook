@@ -1,11 +1,11 @@
-# ascesis-storybook
+# modulor-storybook
 
 Test your Componennts (All kinds of! 😎) with less hassle
 
 ## Installation
 
 ```
-npm i -S ascesis-storybook
+npm i -S modulor-storybook
 ```
 
 ## Use
@@ -37,7 +37,7 @@ customElements.define('a-button', Button);
 By default, storybook it will pickup all files ending with `.story.js`
 ```js
 // file: a-button/a-button.story.js
-import { storiesOf } from 'ascesis-storybook';
+import { storiesOf } from 'modulor-storybook';
 
 require('./a-button');
 
@@ -60,7 +60,7 @@ You need to add npm script in your `package.json` in following way:
   ...,
   "scripts": {
     ...,
-    "storybook": "ascesis-storybook"
+    "storybook": "modulor-storybook"
   },
   ...
 ```
@@ -82,7 +82,7 @@ By default storybook runs on the port `3000` but you can change it by `-p` optio
     ...,
     "scripts": {
       ...,
-      "storybook": "ascesis-storybook -p 3333"
+      "storybook": "modulor-storybook -p 3333"
     },
     ...
   ```
