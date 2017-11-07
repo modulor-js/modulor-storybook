@@ -1,5 +1,5 @@
-const { fireEvent } = require('ascesis');
-const { delegate } = require('ascesis/delegate');
+const { fireEvent } = require('modulor');
+const { delegate } = require('modulor/delegate');
 const storiesTreeTemplate = require('./stories-tree.html');
 
 

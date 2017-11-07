@@ -1,4 +1,4 @@
-const AddonsApi = require("ascesis-storybook/addons");
+const AddonsApi = require("modulor-storybook/addons");
 
 const stylesTemplate = (scope) => `
   <style>

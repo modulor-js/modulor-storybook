@@ -1,4 +1,4 @@
-const { Router } = require('ascesis/router');
+const { Router } = require('modulor/router');
 const { getStories } = require('../../js/story');
 const Channel = require('../../js/channel');
 const AddonsApi = require('../../addons');

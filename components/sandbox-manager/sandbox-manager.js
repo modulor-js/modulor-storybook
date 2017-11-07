@@ -1,7 +1,7 @@
 const Split = require('split.js');
-const { fireEvent } = require('ascesis');
-const { delegate } = require('ascesis/delegate');
-const { Router } = require('ascesis/router');
+const { fireEvent } = require('modulor');
+const { delegate } = require('modulor/delegate');
+const { Router } = require('modulor/router');
 const { getStories } = require('../../js/story');
 const Channel = require('../../js/channel');
 const AddonsApi = require('../../addons');

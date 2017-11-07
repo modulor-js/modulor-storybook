@@ -1,4 +1,4 @@
-const AddonsApi = require("ascesis-storybook/addons");
+const AddonsApi = require("modulor-storybook/addons");
 
 require('inspector-component/lib');
 const createMockedConsole = require('./mockedConsole');

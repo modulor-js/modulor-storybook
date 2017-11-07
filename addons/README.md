@@ -3,7 +3,7 @@
 ## Usage
 
 ```js
-const AddonsApi = require('ascesis-storybook/addons');
+const AddonsApi = require('modulor-storybook/addons');
 
 //define manager plugin
 customElements.define('your-custom-tag', class extends HTMLElement {
