@@ -53,12 +53,12 @@ Promise.all([
     const statsJson = stats.toJson();
 
     customFs.saveFile(path.resolve(BUILD_DIR, 'index.html'), managerPageTemplate({
-      assets: [`${statsJson.publicPath}${statsJson.assetsByChunkName.manager}`],
+      assets: [].concat(statsJson.assetsByChunkName.manager).map(asset => `${statsJson.publicPath}${asset}`),
     }));
 
     customFs.saveFile(path.resolve(BUILD_DIR, 'preview.html'), previewPageTemplate({
       header: header,
-      assets: [`${statsJson.publicPath}${statsJson.assetsByChunkName.preview}`],
+      assets: [].concat(statsJson.assetsByChunkName.preview).map(asset => `${statsJson.publicPath}${asset}`),
     }));
 
   });

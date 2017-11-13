@@ -62,7 +62,7 @@ function appMiddleware(req, res) {
   const stats = assetsByChunkName = res.locals.webpackStats.toJson();
 
   res.send(managerPageTemplate({
-    assets: [`${stats.publicPath}${stats.assetsByChunkName.manager}`],
+    assets: [].concat(stats.assetsByChunkName.manager).map(asset => `${stats.publicPath}${asset}`),
   }));
 }
 
@@ -70,7 +70,7 @@ function previewMiddleware(req, res) {
   const stats = assetsByChunkName = res.locals.webpackStats.toJson();
 
   res.send(previewPageTemplate({
-    assets: [`${stats.publicPath}${stats.assetsByChunkName.preview}`],
+    assets: [].concat(stats.assetsByChunkName.preview).map(asset => `${stats.publicPath}${asset}`),
     header: res.header
   }));
 
