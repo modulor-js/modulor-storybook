@@ -2,7 +2,6 @@ module.exports = scope => `
   <style>
     stories-tree {
       display: block;
-      padding: 0 0 0 5px;
     }
     stories-tree ul a {
       text-decoration: none;
@@ -18,13 +17,13 @@ module.exports = scope => `
     stories-tree ul {
       list-style: none;
     }
-    stories-tree > ul {
+    stories-tree > ul,
+    stories-tree > ul > li{
       padding: 0;
       margin: 0;
     }
     stories-tree > ul > li {
       font-size: 1.2em;
-      margin: 10px 0;
       border-bottom: 1px solid #ccc;
     }
     stories-tree > ul > li li:last-child {

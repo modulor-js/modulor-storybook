@@ -29,15 +29,11 @@ const createElement = (name, attributes) => {
 class ManagerApp extends HTMLElement {
   connectedCallback() {
     this.mobile = this.hasAttribute('mobile');
-    this.innerHTML = template({
-      mobile: this.mobile,
-    });
-    if (this.mobile) {
-      document.body.classList.add('mobile');
-    }
     this.branding = JSON.parse(this.getAttribute('branding') || '{}');
-    const stories = getStories();
-    const firstStory = stories[Object.keys(stories)[0]];
+    this.removeAttribute('branding');
+    this._stories = getStories();
+    this.stories = getStories();
+    const firstStory = this.stories[Object.keys(this.stories)[0]];
     const addonPanels = AddonsApi.getPanels();
 
     const DEFAULT_PARAMS = {
@@ -54,44 +50,7 @@ class ManagerApp extends HTMLElement {
 
     this.state = Object.assign({}, DEFAULT_PARAMS, this.router.getParams());
 
-    // build panels
-    this.$leftPanel = this.querySelector('#left-panel');
-
-    this.$storiesStree = createElement('stories-tree', {
-      class: 'tree',
-      state: stories,
-    });
-    const leftPanelContainer = createElement('div', {
-      class: `${this.mobile ? '' : 'split content'} tree-container`,
-    });
-    leftPanelContainer.innerHTML = `<storybook-branding
-      name="${this.branding.name}"
-      logo="${this.branding.logo}"></storybook-branding>`;
-    leftPanelContainer.appendChild(this.$storiesStree);
-    this.$leftPanel.appendChild(leftPanelContainer);
-
-    /*  build right panels
-     *  correct order of components creation matters a lot here
-     *  channel should be established before rendering plugins
-     * */
-    this.$rightPanel = this.querySelector('#right-panel');
-
-    this.$rightPanel.appendChild(this.$previewFrame = createElement('preview-frame', {
-      class: `${this.mobile ? '' : 'split'} content`,
-      'url-base': this.router.options.base,
-    }));
-
-    this.$previewFrame.render();
-    const channel = new Channel(this.$previewFrame.getWindow());
-    AddonsApi.setChannel(channel);
-
-
-    this.$rightPanel.appendChild(this.$addonsPanel = createElement('sandbox-addons-panel', {
-      class: `${this.mobile ? '' : 'split'} content`,
-      state: addonPanels,
-    }));
-
-    this.splitPanes();
+    this.render();
 
     // handle state change
     delegate.on('size-changed', this, null, this.updateState.bind(this));
@@ -119,7 +78,7 @@ class ManagerApp extends HTMLElement {
       // set active addons panel
       this.$addonsPanel.setActive(query.addon);
 
-      // set active story in stories tree
+      // set active story in this.stories tree
       this.$storiesStree.setActive(query.story, query.storyKind);
 
       this.renderStory(query.story, query.storyKind);
@@ -127,6 +86,57 @@ class ManagerApp extends HTMLElement {
 
     // initial update of paramters + router resolve
     this.router.updateParams(this.state, { replace: true });
+  }
+
+  render() {
+    this.innerHTML = template({
+      mobile: this.mobile,
+    });
+
+    document.body.classList[this.mobile ? 'add' : 'remove']('mobile');
+
+    const addonPanels = AddonsApi.getPanels();
+    // build panels
+    this.$leftPanel = this.querySelector('#left-panel');
+
+    this.$storiesStree = createElement('stories-tree', {
+      class: 'tree',
+      state: this.stories,
+    });
+    const leftPanelContainer = createElement('div', {
+      class: `${this.mobile ? '' : 'split content'} tree-container`,
+    });
+    leftPanelContainer.innerHTML = `<storybook-branding
+        name="${this.branding.name}"
+        logo="${this.branding.logo}"
+      ></storybook-branding>`;
+    leftPanelContainer.appendChild(this.$storiesStree);
+    this.$leftPanel.appendChild(leftPanelContainer);
+
+    /*  build right panels
+     *  correct order of components creation matters a lot here
+     *  channel should be established before rendering plugins
+     * */
+    this.$rightPanel = this.querySelector('#right-panel');
+
+    this.$rightPanel.appendChild(this.$previewFrame = createElement('preview-frame', {
+      class: `${this.mobile ? '' : 'split'} content`,
+      'url-base': this.router.options.base,
+    }));
+
+    this.$previewFrame.render();
+    const channel = new Channel(this.$previewFrame.getWindow());
+    AddonsApi.setChannel(channel);
+
+    window.addEventListener('resize', this.adapt.bind(this));
+    this.adapt();
+
+    this.$rightPanel.appendChild(this.$addonsPanel = createElement('sandbox-addons-panel', {
+      class: `${this.mobile ? '' : 'split'} content`,
+      state: addonPanels,
+    }));
+
+    this.splitPanes();
   }
 
   splitPanes() {
@@ -167,6 +177,28 @@ class ManagerApp extends HTMLElement {
   updateState({ eventData }) {
     this.state = Object.assign({}, this.state, eventData);
     this.router.updateParams(this.state, { silent: true });
+  }
+
+  events() {
+    return {
+      mobile: this.forMobile,
+      filter(query) {
+        this.events && this.events.filter(query);
+      },
+    };
+  }
+
+  forMobile(setMobile) {
+    const oldMobileState = this.hasAttribute('mobile');
+    setMobile ? this.setAttribute('mobile', true) : this.removeAttribute('mobile');
+    if (oldMobileState !== this.hasAttribute('mobile')) {
+      this.mobile = setMobile;
+      this.render();
+    }
+  }
+
+  adapt() {
+    this.forMobile(window.innerWidth <= 600);
   }
 }
 

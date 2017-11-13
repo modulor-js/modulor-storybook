@@ -25,6 +25,7 @@ class StoriesTree extends HTMLElement {
   }
 
   render(stories) {
+    console.log(stories)
     this.innerHTML = storiesTreeTemplate({ stories });
   }
 
