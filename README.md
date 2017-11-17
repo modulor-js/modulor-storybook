@@ -99,6 +99,7 @@ In `.storybook`, main config files are
 - `config.js`
 - `additional.js`
 - `webpack.config.js`
+- `middlewares.js`
 
 ### `config.js`
 
@@ -148,6 +149,49 @@ module.exports = {
   }
 }
 ```
+
+### `middlewares.js`
+
+**EXPERIMENTAL FEATURE**
+
+Configure storybook express server middlewares. This file should be a valid js module with export of:
+
+
+express middleware ([more about express middlewares](http://expressjs.com/en/guide/using-middleware.html)):
+```js
+module.exports = (req, res, next) => { ... };
+```
+
+array of express middlewares:
+```js
+module.exports = [
+  (req, res, next) => { ... },
+  (req, res, next) => { ... }
+]
+```
+
+array of tuples `[route, middleware]`:
+```js
+module.exports = [
+  ['/foo', (req, res, next) => { ... }],
+  ['/bar', (req, res, next) => { ... }]
+]
+```
+
+mixed array:
+```js
+module.exports = [
+  (req, res, next) => { ... },
+  ['/baz', (req, res, next) => { ... }]
+]
+```
+
+#### Use cases
+
+- Mock ajax calls
+- Redirect ajax calls to another endpoint
+- Base authorisation
+- etc
 
 ----
 

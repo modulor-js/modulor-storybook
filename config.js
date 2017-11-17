@@ -9,7 +9,8 @@ const defaultStoriesConfig = {
   storiesMask: '**/*.story.js',
   ignore: 'node_modules/**/*',
   setupFile: 'additional.js',
-  previewHeader: 'preview-header.html'
+  previewHeader: 'preview-header.html',
+  middlewaresFile: 'middlewares.js',
 };
 
 const customStoriesConfig = require(path.resolve(TARGET_DIR, 'package.json'))['storybook'] || {};
@@ -40,7 +41,9 @@ module.exports = {
     CUSTOM_PREVIEW_HEADER: path.resolve(TARGET_DIR, storiesConfig.storybookDir, storiesConfig.previewHeader),
 
     SETUP_FILE: path.resolve(TARGET_DIR, storiesConfig.storybookDir, storiesConfig.setupFile),
+    MIDDLEWARES_FILE: path.resolve(TARGET_DIR, storiesConfig.storybookDir, storiesConfig.middlewaresFile),
+
     MANAGER_APP: path.resolve(PROJECT_DIR, 'js/manager.js'),
-    PREVIEW_APP: path.resolve(PROJECT_DIR, 'js/preview.js')
+    PREVIEW_APP: path.resolve(PROJECT_DIR, 'js/preview.js'),
   }
 }
