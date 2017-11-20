@@ -8,12 +8,13 @@ const pack = require('./package');
 const customFs = require('./lib/fs');
 const getWebpackConfig = require('./lib/get_webpack_config');
 
-const { CUSTOM_PREVIEW_HEADER } = require('./config').paths;
+const { CUSTOM_PREVIEW_HEADER, MIDDLEWARES_FILE } = require('./config').paths;
 
 const managerPageTemplate = require('./templates/manager_page.html');
 const previewPageTemplate = require('./templates/preview_page.html');
 
 const webpackMiddleware = require("webpack-dev-middleware");
+
 
 
 //read arguments
@@ -32,8 +33,9 @@ const app = express();
 
 Promise.all([
   customFs.readFile(CUSTOM_PREVIEW_HEADER),
-  getWebpackConfig()
-]).then(([header, webpackConfig]) => {
+  getWebpackConfig(),
+  customFs.checkFile(MIDDLEWARES_FILE)
+]).then(([header, webpackConfig, customMiddlewaresExist]) => {
 
   const compiler = webpack(webpackConfig);
 
@@ -48,6 +50,20 @@ Promise.all([
   });
 
   app.get('/preview.html', previewMiddleware);
+
+  if(customMiddlewaresExist){
+    try {
+      const customMiddlewares = [].concat(require(MIDDLEWARES_FILE));
+      customMiddlewares.forEach(middleware => {
+        app.use.apply(app, [].concat(middleware));
+      });
+      console.log(`Added custom middlewares from ${MIDDLEWARES_FILE}`);
+    } catch(e) {
+      console.error(
+        `Couldn't load middlewares from file ${MIDDLEWARES_FILE}. Error: ${e}`
+      );
+    }
+  }
 
   app.use(appMiddleware);
 
