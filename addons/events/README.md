@@ -10,7 +10,7 @@ storiesOf('mystory')
 
 //common events for all storykinds using decorator
 storiesOf('mystory')
-  .addDecorator(withEvents(['click'])
+  .addDecorator(withEvents(['click']))
   .add('mystorykind', () => `
     //render storykind
   `);

@@ -11,16 +11,13 @@ class PreviewApp extends HTMLElement {
     const channel = new Channel(window.parent);
     AddonsApi.setChannel(channel);
 
-    const router = new Router({ useHash: true });
+    const router = new Router();
+    const { story, storyKind } = router.getParams();
 
-    router.add('*', (path, { story, storyKind }) => {
-      // probably makes no sence to notify listeners here
-      AddonsApi.notifyOnStoryListeners(story, storyKind);
+    AddonsApi.notifyOnStoryListeners(story, storyKind);
 
-      this.innerHTML = stories[story].renderStory(storyKind);
-    });
+    this.innerHTML = stories[story].renderStory(storyKind);
 
-    router.resolve();
   }
 }
 
