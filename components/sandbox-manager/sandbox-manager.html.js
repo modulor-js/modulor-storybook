@@ -1,54 +1,44 @@
 module.exports = () => `
   <style>
-    .fullscreen-icon,
-    .arrows-overlap {
-      background-color: Gainsboro;
-      border-radius: 3px;
-    }
-    .fullscreen-icon {
-      display: block;
-      font-style: normal;
-      height: 25px;
-      position: absolute;
-      right: 15px;
-      top: 15px;
-      width: 25px;
-    }
-    .fullscreen-icon:after,
-    .fullscreen-icon:before {
-      color: gray;
-      content: "\u2192";
-      display: block;
-      font-size: 18px;
-      position: absolute;
-    }
-    .fullscreen-icon:after {
-      transform: rotate(-45deg);
-      top: -3px;
-      right: -2px;
-    }
-    .fullscreen-icon:before {
-      transform: rotate(135deg);
-      bottom: -3px;
-      left: -2px;
-    }
-    .arrows-overlap {
-      display: inline-block;
-      background-color: gainsboro;
-      height: 8px;
-      width: 8px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      margin-left: -4px;
-      margin-top: -4px;
-      z-index: 50;
-    }
 
     sandbox-manager-application {
       display: block;
       width: 100%;
       height: 100%;
+    }
+
+    .split {
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .content {
+      border: 1px solid #C0C0C0;
+      box-shadow: inset 0 1px 2px #e4e4e4;
+      background-color: #fff;
+      display: block;
+      height: 100%;
+      width: 100%;
+    }
+    .gutter {
+      background-color: transparent;
+
+      background-repeat: no-repeat;
+      background-position: 50%;
+    }
+    .gutter.gutter-horizontal {
+      cursor: col-resize;
+    }
+    .gutter.gutter-vertical {
+      cursor: row-resize;
+    }
+    .split.split-horizontal, .gutter.gutter-horizontal {
+      height: 100%;
+      float: left;
     }
   </style>
 
