@@ -7,4 +7,4 @@ const stories = `
 `;
 
 storiesOf('stories-tree')
-  .add('default', (stories) => '<stories-tree></stories-tree>');
+  .add('default', () => `<stories-tree stories='${stories}'></stories-tree>`);

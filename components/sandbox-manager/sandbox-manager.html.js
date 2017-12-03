@@ -1,7 +1,19 @@
 module.exports = scope => `
   <style>
+<<<<<<< Updated upstream
 
     sandbox-manager-application {
+=======
+    .hidden {
+      display: none;
+    }
+    .fullscreen-icon,
+    .arrows-overlap {
+      background-color: Gainsboro;
+      border-radius: 3px;
+    }
+    .fullscreen-icon {
+>>>>>>> Stashed changes
       display: block;
       width: 100%;
       height: 100%;
@@ -36,7 +48,17 @@ module.exports = scope => `
     .gutter.gutter-vertical {
       cursor: row-resize;
     }
+<<<<<<< Updated upstream
     .split.split-horizontal, .gutter.gutter-horizontal {
+=======
+    sandbox-manager-application * {
+      box-sizing: border-box;
+    }
+
+    sandbox-manager-application {
+      display: block;
+      width: 100%;
+>>>>>>> Stashed changes
       height: 100%;
       float: left;
     }

@@ -5,6 +5,7 @@ const storiesTreeTemplate = require('./stories-tree.html');
 
 class StoriesTree extends HTMLElement {
   connectedCallback() {
+    this.stories = JSON.parse(this.getAttribute('stories') || '{}');
     delegate.on('change', this, 'li[story-kind]', (event, target) => {
       event.$storyKindEl = target;
     });
@@ -24,8 +25,7 @@ class StoriesTree extends HTMLElement {
     });
   }
 
-  render(stories) {
-    console.log(stories)
+  render(stories = this.stories) {
     this.innerHTML = storiesTreeTemplate({ stories });
   }
 
