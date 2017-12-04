@@ -1,11 +1,7 @@
 module.exports = scope => `
   <style>
-<<<<<<< Updated upstream
-
-    sandbox-manager-application {
-=======
     .hidden {
-      display: none;
+      display: none !important;
     }
     .fullscreen-icon,
     .arrows-overlap {
@@ -13,7 +9,6 @@ module.exports = scope => `
       border-radius: 3px;
     }
     .fullscreen-icon {
->>>>>>> Stashed changes
       display: block;
       width: 100%;
       height: 100%;
@@ -28,6 +23,9 @@ module.exports = scope => `
       overflow-x: hidden;
     }
 
+    .mobile .content {
+      border: 0;
+    }
     .content {
       border: 1px solid #C0C0C0;
       box-shadow: inset 0 1px 2px #e4e4e4;
@@ -48,9 +46,6 @@ module.exports = scope => `
     .gutter.gutter-vertical {
       cursor: row-resize;
     }
-<<<<<<< Updated upstream
-    .split.split-horizontal, .gutter.gutter-horizontal {
-=======
     sandbox-manager-application * {
       box-sizing: border-box;
     }
@@ -58,7 +53,6 @@ module.exports = scope => `
     sandbox-manager-application {
       display: block;
       width: 100%;
->>>>>>> Stashed changes
       height: 100%;
       float: left;
     }

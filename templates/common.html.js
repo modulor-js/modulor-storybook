@@ -1,9 +1,8 @@
-const config = require('../config');
-
 module.exports = scope => `
     <html>
       <head>
-        <link rel="icon" type="${config.stories.branding.icon.type}" href="${config.stories.branding.icon.url}" />
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         ${scope.headContent}
       </head>
       <body style="margin:0">

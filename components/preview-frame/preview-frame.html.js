@@ -7,6 +7,11 @@ module.exports = scope => `
       border: none;
     }
 
+    .mobile .fullscreen-icon {
+      right: 50px;
+      top: 11px;
+    }
+
     .fullscreen-icon,
     .arrows-overlap {
       background-color: Gainsboro;

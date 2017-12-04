@@ -22,7 +22,6 @@ const SIZES = {
 
 const createElement = (name, attributes) => {
   const $el = document.createElement(name);
-  console.log($el.type, $el)
   Object.keys(attributes).forEach((attr) => {
     if (attr in $el) {
       $el[attr] = attributes[attr];
@@ -39,7 +38,6 @@ class ManagerApp extends HTMLElement {
     this.mobile = this.hasAttribute('mobile');
     this.branding = JSON.parse(this.getAttribute('branding') || '{}');
     this.removeAttribute('branding');
-    this._stories = getStories();
     this.stories = getStories();
     const firstStory = this.stories[Object.keys(this.stories)[0]];
     const addonPanels = AddonsApi.getPanels();
@@ -206,7 +204,7 @@ class ManagerApp extends HTMLElement {
   }
 
   adapt() {
-    this.toggleMobile(window.innerWidth <= SIZES.breakpoint);
+    this.toggleMobile(window.outerWidth <= SIZES.breakpoint);
   }
 
   paneSizes(query) {

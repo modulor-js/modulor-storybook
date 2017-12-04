@@ -1,2 +1,2 @@
 // Polyfill For firefox
-require('@webcomponents/webcomponentsjs');
+// require('@webcomponents/webcomponentsjs');

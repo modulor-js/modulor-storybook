@@ -16,8 +16,6 @@ const previewPageTemplate = require('./templates/preview_page.html');
 
 const webpackMiddleware = require("webpack-dev-middleware");
 
-
-
 //read arguments
 program
   .version(pack.version)
@@ -89,7 +87,7 @@ function previewMiddleware(req, res) {
 
   res.send(previewPageTemplate({
     assets: [].concat(stats.assetsByChunkName.preview).map(asset => `${stats.publicPath}${asset}`),
-    header: res.header
+    header: res.header,
+    branding: config.stories.branding,
   }));
-
 }
