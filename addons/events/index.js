@@ -23,6 +23,27 @@ const stylesTemplate = (scope) => `
     border: 1px solid ${scope.animatedStateColor};
     color: white;
   }
+  #events-data {
+    list-style: none;
+    padding: 0;
+    display: table;
+  }
+  #events-data li {
+    display: table-row;
+  }
+  #events-data .info{
+    padding: 5px;
+    display: table-cell;
+  }
+  #events-data .info .label{
+    color: #ccc;
+  }
+  #events-data .info .label:after{
+    content: ':';
+  }
+  #events-data .info .value{
+    color: #555;
+  }
   </style>
 `;
 
@@ -33,7 +54,12 @@ const ANIMATION_DURATION = 250;
 const COLOR = '#219BC6';
 const ANIMATED_STATE_COLOR = '#1DB1E5';
 
-
+const dataTemplate = (scope) => `
+<span class="info">
+  <span class="label">${scope.label}</span>
+  <span class="value">${scope.value}</span>
+</span>
+`;
 //define manager plugin
 class EventsManager extends HTMLElement {
   connectedCallback() {
@@ -49,21 +75,28 @@ class EventsManager extends HTMLElement {
 
       const eventsCode = events
         .map(
-          event => `
+        event => `
           <span id="${event}" class="logger-event-btn">${event}</span>
         `).join('');
-
-      this.innerHTML = styles + eventsCode;
+      const list = '<ul id="events-data"></ul>';
+      this.innerHTML = styles + eventsCode + list;
+      this.list = this.querySelector('#events-data');
     });
 
     this.channel.on(EVENT_FIRED, event => {
-      this.addClassFor(document.querySelector(`#${event}`), "fired", ANIMATION_DURATION);
+      this.addClassFor(document.querySelector(`#${event.type}`), "fired", ANIMATION_DURATION);
+      const li = document.createElement('li');
+      const info = [];
+      info.push({ label: +new Date, value: event.type });
+      info.push({ label: 'Data', value: event.data })
+      li.innerHTML = info.map(dataTemplate).join('')
+      this.list.insertBefore(li, this.list.firstElementChild);
     });
 
     AddonsApi.onStory(this.empty.bind(this));
   }
 
-  empty(){
+  empty() {
     this.innerHTML = '';
   }
 
@@ -75,7 +108,7 @@ class EventsManager extends HTMLElement {
   }
 }
 
-customElements.define( "events-manager", EventsManager);
+customElements.define("events-manager", EventsManager);
 AddonsApi.addPanel("Events", () => `<events-manager></events-manager>`);
 
 
@@ -89,13 +122,17 @@ class EventsPreview extends HTMLElement {
 
     this.channel.emit(EVENTS_LIST_UPDATE, events);
 
-    events.forEach(eventName => this.addEventListener(eventName, ({ type }) => {
-      this.channel.emit(EVENT_FIRED, type);
+    events.forEach(eventName => this.addEventListener(eventName, e => {
+      console.log(e);
+      this.channel.emit(EVENT_FIRED, {
+        type: e.type,
+        data: e.data || e.value || e.target.value
+      });
     }));
   }
 }
 
-customElements.define( "events-preview", EventsPreview);
+customElements.define("events-preview", EventsPreview);
 
 
 const withEvents = (events, render) => (story) => `
