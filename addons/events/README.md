@@ -14,5 +14,12 @@ storiesOf('mystory')
   .add('mystorykind', () => `
     //render storykind
   `);
+
+//common events for all storykinds using decorator with logging
+storiesOf('mystory')
+  .addDecorator(withEvents(['click', { type: 'change', extract: ['value', 'target.value'] }]))
+  .add('mystorykind', () => `
+    //render storykind
+  `);
 ```
 
