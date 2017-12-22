@@ -1,11 +1,15 @@
-module.exports = (scope) => `
-
+module.exports = scope => `
   <style>
     #preview-frame {
       display: block;
       width: 100%;
       height: 100%;
       border: none;
+    }
+
+    .mobile .fullscreen-icon {
+      right: 50px;
+      top: 11px;
     }
 
     .fullscreen-icon,

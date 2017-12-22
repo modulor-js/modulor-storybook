@@ -4,6 +4,9 @@ const TARGET_DIR = process.cwd();
 const PROJECT_DIR = __dirname;
 
 const defaultStoriesConfig = {
+  branding: {
+    name: 'Storybook',
+  },
   storybookDir: '.storybook',
   webpackConfig: 'webpack.config.js',
   storiesMask: '**/*.story.js',

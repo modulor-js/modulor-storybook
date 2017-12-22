@@ -1,12 +1,12 @@
 const template = require('./preview-frame.html');
 
 class PreviewFrame extends HTMLElement {
-  connectedCallback(){
+  connectedCallback() {
   }
-  getWindow(){
+  getWindow() {
     return this.$previewFrame.contentWindow;
   }
-  setActive(story, storyKind){
+  setActive(story, storyKind) {
     const url = `${this.urlBase}preview.html?story=${story}&storyKind=${storyKind}`;
 
     this.getWindow().location.replace(url);
@@ -14,13 +14,12 @@ class PreviewFrame extends HTMLElement {
     this.$fullscreenAnchor.href = url;
   }
 
-  get urlBase(){
+  get urlBase() {
     return this.getAttribute('url-base') || '/';
   }
 
-  render(){
+  render() {
     this.innerHTML = template();
-
     this.$previewFrame = this.querySelector('#preview-frame');
     this.$fullscreenAnchor = this.querySelector('#fullscreen-anchor');
   }

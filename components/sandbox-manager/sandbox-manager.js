@@ -11,7 +11,14 @@ const template = require('./sandbox-manager.html');
 require('../addons-panel/addons-panel');
 require('../stories-tree/stories-tree');
 require('../preview-frame/preview-frame');
+require('../storybook-branding/storybook-branding');
 
+const SIZES = {
+  width: 80,
+  height: 75,
+  gutter: 8,
+  breakpoint: 600,
+};
 
 const createElement = (name, attributes) => {
   const $el = document.createElement(name);
@@ -19,7 +26,8 @@ const createElement = (name, attributes) => {
     if (attr in $el) {
       $el[attr] = attributes[attr];
     } else {
-      $el.setAttribute(attr, attributes[attr]);
+      const value = typeof attributes[attr] !== 'string' ? JSON.stringify(attributes[attr]) : attributes[attr];
+      $el.setAttribute(attr, value);
     }
   });
   return $el;
@@ -27,19 +35,18 @@ const createElement = (name, attributes) => {
 
 class ManagerApp extends HTMLElement {
   connectedCallback() {
-    this.innerHTML = template();
-
-    const stories = getStories();
-    const firstStory = stories[Object.keys(stories)[0]];
+    this.mobile = this.hasAttribute('mobile');
+    this.branding = JSON.parse(this.getAttribute('branding') || '{}');
+    this.removeAttribute('branding');
+    this.stories = getStories();
+    const firstStory = this.stories[Object.keys(this.stories)[0]];
     const addonPanels = AddonsApi.getPanels();
 
-    const DEFAULT_PARAMS = {
-      width: 80,
-      height: 75,
+    const DEFAULT_PARAMS = Object.assign({}, SIZES, {
       story: firstStory.storyName,
       storyKind: Object.keys(firstStory.getStories())[0],
       addon: Object.keys(addonPanels)[0],
-    };
+    });
 
     this.router = new Router({
       base: window.location.pathname,
@@ -47,58 +54,7 @@ class ManagerApp extends HTMLElement {
 
     this.state = Object.assign({}, DEFAULT_PARAMS, this.router.getParams());
 
-    // build panels
-    this.$leftPanel = this.querySelector('#left-panel');
-
-    this.$leftPanel.appendChild(this.$storiesStree = createElement('stories-tree', {
-      class: 'split content',
-      state: stories,
-    }));
-
-    /*  build right panels
-     *  correct order of components creation matters a lot here
-     *  channel should be established before rendering plugins
-     * */
-    this.$rightPanel = this.querySelector('#right-panel');
-
-    this.$rightPanel.appendChild(this.$previewFrame = createElement('preview-frame', {
-      class: 'split content',
-      'url-base': this.router.options.base,
-    }));
-
-    this.$previewFrame.render();
-    const channel = new Channel(this.$previewFrame.getWindow());
-    AddonsApi.setChannel(channel);
-
-
-    this.$rightPanel.appendChild(this.$addonsPanel = createElement('sandbox-addons-panel', {
-      class: 'split content',
-      state: addonPanels,
-    }));
-
-
-    // resizable grid
-    const _self = this;
-
-    const vSplit = Split([this.$leftPanel, this.$rightPanel], {
-      gutterSize: 8,
-      cursor: 'col-resize',
-      onDragEnd() {
-        const width = Math.round(vSplit.getSizes()[1]);
-        fireEvent('size-changed', _self, { width });
-      },
-    });
-
-    const hSplit = Split([this.$previewFrame, this.$addonsPanel], {
-      direction: 'vertical',
-      gutterSize: 8,
-      cursor: 'row-resize',
-      onDragEnd() {
-        const height = Math.round(hSplit.getSizes()[0]);
-        fireEvent('size-changed', _self, { height });
-      },
-    });
-
+    this.render();
 
     // handle state change
     delegate.on('size-changed', this, null, this.updateState.bind(this));
@@ -109,22 +65,20 @@ class ManagerApp extends HTMLElement {
       this.renderStory(this.state.story, this.state.storyKind);
     });
 
+    window.addEventListener('resize', this.adapt.bind(this));
+    this.adapt();
 
     /*  routing
      *  here all routes changes will be observed
      *  only query parameters will be used
      * */
     this.router.add('*', (path, query) => {
-      // set sizes
-      const width = Number(query.width);
-      const height = Number(query.height);
-      vSplit.setSizes([100 - width, width]);
-      hSplit.setSizes([height, 100 - height]);
+      this.paneSizes({ width: query.width, height: query.height });
 
       // set active addons panel
       this.$addonsPanel.setActive(query.addon);
 
-      // set active story in stories tree
+      // set active story in this.stories tree
       this.$storiesStree.setActive(query.story, query.storyKind);
 
       this.renderStory(query.story, query.storyKind);
@@ -132,6 +86,85 @@ class ManagerApp extends HTMLElement {
 
     // initial update of paramters + router resolve
     this.router.updateParams(this.state, { replace: true });
+  }
+
+  render() {
+    this.innerHTML = template({
+      mobile: this.mobile,
+    });
+
+    document.body.classList[this.mobile ? 'add' : 'remove']('mobile');
+
+    const addonPanels = AddonsApi.getPanels();
+    // build panels
+    this.$leftPanel = this.querySelector('#left-panel');
+
+    this.$storiesStree = createElement('stories-tree', {
+      class: `${this.mobile ? 'hidden' : ''} tree`,
+      state: this.stories,
+    });
+    const leftPanelContainer = createElement('div', {
+      class: `${this.mobile ? '' : 'split content'} tree-container`,
+    });
+
+    leftPanelContainer.appendChild(this.$branding = createElement('storybook-branding', {
+      name: this.branding.name,
+      logo: this.branding.logo,
+    }));
+    leftPanelContainer.appendChild(this.$storiesStree);
+    this.$leftPanel.appendChild(leftPanelContainer);
+    this.$branding.setEvents(this.events());
+
+    /*  build right panels
+     *  correct order of components creation matters a lot here
+     *  channel should be established before rendering plugins
+     * */
+    this.$rightPanel = this.querySelector('#right-panel');
+
+    this.$rightPanel.appendChild(this.$previewFrame = createElement('preview-frame', {
+      class: `${this.mobile ? '' : 'split'} content`,
+      'url-base': this.router.options.base,
+    }));
+
+    this.$previewFrame.render();
+    const channel = new Channel(this.$previewFrame.getWindow());
+    AddonsApi.setChannel(channel);
+
+    this.$rightPanel.appendChild(this.$addonsPanel = createElement('sandbox-addons-panel', {
+      class: `${this.mobile ? 'hidden' : 'split'} content`,
+      state: addonPanels,
+    }));
+
+    this.splitPanes();
+    this.paneSizes({ width: this.state.width, height: this.state.height });
+  }
+
+  splitPanes() {
+    if (this.mobile) {
+      return;
+    }
+    // resizable grid
+    const _self = this;
+
+    this.vSplit = Split([this.$leftPanel, this.$rightPanel], {
+      gutterSize: SIZES.gutter,
+      cursor: 'col-resize',
+      minSize: 250,
+      onDragEnd() {
+        const width = Math.round(_self.vSplit.getSizes()[1]);
+        fireEvent('size-changed', _self, { width });
+      },
+    });
+
+    this.hSplit = Split([this.$previewFrame, this.$addonsPanel], {
+      direction: 'vertical',
+      gutterSize: SIZES.gutter,
+      cursor: 'row-resize',
+      onDragEnd() {
+        const height = Math.round(_self.hSplit.getSizes()[0]);
+        fireEvent('size-changed', _self, { height });
+      },
+    });
   }
 
   // render active story in frame + notify onStory listeners
@@ -145,6 +178,48 @@ class ManagerApp extends HTMLElement {
   updateState({ eventData }) {
     this.state = Object.assign({}, this.state, eventData);
     this.router.updateParams(this.state, { silent: true });
+  }
+
+  events() {
+    return {
+      isMobile: () => this.mobile,
+      mobile: this.toggleMobile.bind(this),
+      tree: () => {
+        this.$storiesStree.classList[this.$storiesStree.classList.contains('hidden') ? 'remove' : 'add']('hidden');
+        this.paneSizes();
+      },
+      filter(query) {
+        this.events && this.events.filter(query);
+      },
+    };
+  }
+
+  toggleMobile(setMobile) {
+    const oldMobileState = this.hasAttribute('mobile');
+    if (oldMobileState !== setMobile) {
+      this.mobile = setMobile;
+      this[setMobile ? 'setAttribute' : 'removeAttribute']('mobile', setMobile);
+      this.render();
+    }
+  }
+
+  adapt() {
+    this.toggleMobile(window.outerWidth <= SIZES.breakpoint);
+  }
+
+  paneSizes(query) {
+    if (!this.mobile) {
+      // set sizes
+      const width = Number(query.width);
+      const height = Number(query.height);
+      this.vSplit.setSizes([100 - width, width]);
+      this.hSplit.setSizes([height, 100 - height]);
+    } else {
+      this.$leftPanel.removeAttribute('style');
+      const height = this.$leftPanel.getBoundingClientRect().height;
+      this.$leftPanel.style.height = `${height}px`;
+      this.$rightPanel.style.height = `calc( 100% - ${height}px )`;
+    }
   }
 }
 

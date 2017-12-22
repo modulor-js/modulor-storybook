@@ -1,7 +1,14 @@
-module.exports = () => `
+module.exports = scope => `
   <style>
-
-    sandbox-manager-application {
+    .hidden {
+      display: none !important;
+    }
+    .fullscreen-icon,
+    .arrows-overlap {
+      background-color: Gainsboro;
+      border-radius: 3px;
+    }
+    .fullscreen-icon {
       display: block;
       width: 100%;
       height: 100%;
@@ -16,6 +23,9 @@ module.exports = () => `
       overflow-x: hidden;
     }
 
+    .mobile .content {
+      border: 0;
+    }
     .content {
       border: 1px solid #C0C0C0;
       box-shadow: inset 0 1px 2px #e4e4e4;
@@ -36,14 +46,20 @@ module.exports = () => `
     .gutter.gutter-vertical {
       cursor: row-resize;
     }
-    .split.split-horizontal, .gutter.gutter-horizontal {
+    sandbox-manager-application * {
+      box-sizing: border-box;
+    }
+
+    sandbox-manager-application {
+      display: block;
+      width: 100%;
       height: 100%;
       float: left;
     }
   </style>
 
-  <div id="left-panel" class="split split-horizontal left-panel">
+  <div id="left-panel" class="${scope.mobile ? '' : 'split split-horizontal'} left-panel">
   </div>
-  <div id="right-panel" class="split split-horizontal right-panel">
+  <div id="right-panel" class="${scope.mobile ? '' : 'split split-horizontal'} right-panel">
   </div>
 `;

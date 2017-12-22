@@ -7,6 +7,7 @@ const pack = require('./package');
 
 const customFs = require('./lib/fs');
 const getWebpackConfig = require('./lib/get_webpack_config');
+const config = require('./config');
 
 const { CUSTOM_PREVIEW_HEADER, MIDDLEWARES_FILE } = require('./config').paths;
 
@@ -14,8 +15,6 @@ const managerPageTemplate = require('./templates/manager_page.html');
 const previewPageTemplate = require('./templates/preview_page.html');
 
 const webpackMiddleware = require("webpack-dev-middleware");
-
-
 
 //read arguments
 program
@@ -79,6 +78,7 @@ function appMiddleware(req, res) {
 
   res.send(managerPageTemplate({
     assets: [].concat(stats.assetsByChunkName.manager).map(asset => `${stats.publicPath}${asset}`),
+    branding: config.stories.branding,
   }));
 }
 
@@ -87,7 +87,7 @@ function previewMiddleware(req, res) {
 
   res.send(previewPageTemplate({
     assets: [].concat(stats.assetsByChunkName.preview).map(asset => `${stats.publicPath}${asset}`),
-    header: res.header
+    header: res.header,
+    branding: config.stories.branding,
   }));
-
 }

@@ -1,7 +1,8 @@
 module.exports = scope => `
     <html>
       <head>
-        <link rel="icon" href="//www.iconsdb.com/icons/download/black/square-dashed-16.ico" type="image/x-icon" />
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         ${scope.headContent}
       </head>
       <body style="margin:0">
