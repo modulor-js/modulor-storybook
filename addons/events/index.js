@@ -1,60 +1,8 @@
-const AddonsApi = require('modulor-storybook/addons');
+const AddonsApi = require('../../addons');
 const dateFormat = require('dateformat');
+const stylesTemplate = require('./style.css').default;
+require('inspector-component/src/index.js');
 
-const stylesTemplate = scope => `
-  <style>
-  .logger-event-btn {
-    background-color: white;
-    border-radius: 5px;
-    border: 1px solid ${scope.color};
-    color: ${scope.color};
-    display: inline-block;
-    font-family: "Open Sans", sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    height: 30px;
-    line-height: 30px;
-    margin-right: 5px;
-    padding-left: 20px;
-    padding-right: 20px;
-    transition: all ${scope.duration}ms;
-  }
-  .logger-event-btn.fired {
-    background-color: ${scope.animatedStateColor};
-    border: 1px solid ${scope.animatedStateColor};
-    color: white;
-  }
-  #events-data {
-    list-style: none;
-    padding: 0;
-    display: table;
-  }
-  #events-data li {
-    display: table-row;
-  }
-  #events-data .info{
-    padding: 5px;
-    display: table-cell;
-    font-family:Inconsolata, Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
-  }
-  #events-data .info .label{
-    color: #999;
-  }
-  #events-data .info .label:after{
-    /* (Un)comment following line to show/hide a colon after the grey label */
-    /* content: ':'; */
-  }
-  #events-data .info .value{
-    color: #555;
-  }
-  #events-data .info.info-event .value{
-    color: purple;
-  }
-  #events-data .info.info-data .value{
-    color: #219bc6;
-  }
-  </style>
-`;
 
 const EVENT_FIRED = 'event-fired';
 const EVENTS_LIST_UPDATE = 'events-plugin-events-list';
@@ -66,7 +14,7 @@ const ANIMATED_STATE_COLOR = '#1DB1E5';
 const dataTemplate = scope => `
 <span class="info ${scope.className || ''}">
   ${scope.label ? `<span class="label">${scope.label}</span>` : ''}
-  <span class="value">${scope.value}</span>
+  <span class="value">${scope.logger ? `<inspector-component data='${scope.value}'></inspector-component>` : scope.value}</span>
 </span>
 `;
 
@@ -82,22 +30,36 @@ class EventsManager extends HTMLElement {
     });
 
     this.channel.on(EVENTS_LIST_UPDATE, (events) => {
+      const clear = '<button id="clear-log" class="logger-event-btn clear-button" type="button">Clear</button>';
       const eventsCode = events.map((event) => {
         const eventName = typeof event === 'string' ? event : event.type;
         return `<span id="${eventName}" class="logger-event-btn">${eventName}</span>`;
       }).join('');
       const list = '<ul id="events-data"></ul>';
-      this.innerHTML = styles + eventsCode + list;
+      this.innerHTML = clear + styles + eventsCode + list;
       this.list = this.querySelector('#events-data');
     });
-
+    this.addEventListener('click', (e) => {
+      if (e.target.matches('#clear-log')) {
+        this.list.innerHTML = '';
+      }
+    });
     this.channel.on(EVENT_FIRED, (event) => {
       this.addClassFor(document.querySelector(`#${event.type}`), 'fired', ANIMATION_DURATION);
       if (event.data) {
         const li = document.createElement('li');
         li.innerHTML = [
-          { label: dateFormat(+new Date, DATE_FORMAT), value: event.type, className: 'info-event' },
-          { label: '', value: JSON.stringify(event.data), className: 'info-data' },
+          {
+            value: event.type,
+            className: 'info-event',
+            label: dateFormat(+new Date, DATE_FORMAT),
+          },
+          {
+            label: '',
+            logger: true,
+            className: 'info-data',
+            value: JSON.stringify(event.data),
+          },
         ].map(dataTemplate).join('');
         this.list.insertBefore(li, this.list.firstElementChild);
       }
@@ -110,7 +72,7 @@ class EventsManager extends HTMLElement {
     this.innerHTML = '';
   }
 
-  addClassFor(el, className, duration) {
+  addClassFor(el = this, className, duration) {
     el.classList.add(className);
     setTimeout(() => {
       el.classList.remove(className);
@@ -140,8 +102,8 @@ class EventsPreview extends HTMLElement {
         };
         if (eventName !== event) {
           eventData.data = event.extract.reduce((acc, key) => {
-            const subkeys = key.split('.')
-            acc[key] = subkeys.length > 1 ? subkeys.reduce((acc, k) => acc[k], e) : e[key];
+            const subkeys = key.split('.');
+            acc[key] = subkeys.length > 1 ? subkeys.reduce((ac, k) => ac[k], e) : e[key];
             return acc;
           }, {});
           // Log the event info to help in debugging
@@ -155,13 +117,11 @@ class EventsPreview extends HTMLElement {
 
 customElements.define('events-preview', EventsPreview);
 
-
 const withEvents = (events, render) => story => `
   <events-preview events='${JSON.stringify(events)}'>
     ${(render || story)()}
   </events-preview>
 `;
-
 
 module.exports = {
   withEvents,

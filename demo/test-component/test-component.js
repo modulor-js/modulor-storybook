@@ -1,11 +1,14 @@
 class Component extends HTMLElement {
-  constructor() {
-    super();
-  }
-
   connectedCallback() {
     console.log('Test Component Mounted');
-    this.innerHTML = '<h1>Hello World</h1>';
+    const content = this.innerHTML;
+    this.innerHTML = `<h1>Test Component</h1>
+    <div>
+      ${content}
+      <br/>
+      <input type="text" name="name" />
+    </div>
+    `;
   }
 }
 customElements.define('test-component', Component);
