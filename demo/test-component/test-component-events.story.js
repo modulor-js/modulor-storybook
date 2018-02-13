@@ -14,4 +14,5 @@ storiesOf('Test Events')
   .add('hello', () =>
     `<test-component>
       hello world for events plugin
-    </test-component>`)
+    </test-component>`);
+
