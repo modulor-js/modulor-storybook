@@ -1,4 +1,4 @@
-module.exports = (scope) => `
+module.exports = scope => `
   <style>
     stories-tree ul a {
       text-decoration: none;
@@ -49,9 +49,25 @@ module.exports = (scope) => `
     stories-tree input[name="storyKind"]:checked + a {
       background: #eee;
     }
+
+    stories-tree .hide-story {
+      display: none;
+    }
+
+    stories-tree .filter-input {
+      box-shadow: 0 0 1em 0 #b8b8b8;
+      border: none;
+      font-size: 14px;
+      padding: 0.5em 1em;
+      position: sticky;
+      top: 0;
+      width: 100%;
+    }
   </style>
 
-  <ul>
+  <input class="filter-input" type="textbox" ref="filter-input" placeholder="${scope.placeholder}">
+
+  <ul ref="story-list">
   ${Object.keys(scope.stories).map((story, index) => `
     <li story="${story}">
       <label for="story-${index}">
@@ -59,7 +75,7 @@ module.exports = (scope) => `
       </label>
       <input type="radio" name="story" story="${story}" id="story-${index}"/>
       <ul>
-      ${Object.keys(scope.stories[story].getStories()).map((storyKind) => `
+      ${Object.keys(scope.stories[story].getStories()).map(storyKind => `
         <li story-kind="${storyKind}">
           <label>
             <input story-kind="${storyKind}" name="storyKind" type="radio"/>
