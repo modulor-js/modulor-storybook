@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const express = require('express');
-const webpack = require("webpack");
+const webpack = require('webpack');
 const program = require('commander');
 const pack = require('./package');
 
@@ -13,35 +13,37 @@ const { CUSTOM_PREVIEW_HEADER, MIDDLEWARES_FILE } = require('./config').paths;
 const managerPageTemplate = require('./templates/manager_page.html');
 const previewPageTemplate = require('./templates/preview_page.html');
 
-const webpackMiddleware = require("webpack-dev-middleware");
+const webpackMiddleware = require('webpack-dev-middleware');
+
+const networkInterfaces = require('os').networkInterfaces();
+
+const IP_ADDR = getIpAddr();
 
 
-
-//read arguments
+// read arguments
 program
   .version(pack.version)
   .option('-p, --port <n>', 'Port')
   .parse(process.argv);
 
 
-//settings
+// settings
 const PORT = program.port || 3000;
 
 
-//app
+// app
 const app = express();
 
 Promise.all([
   customFs.readFile(CUSTOM_PREVIEW_HEADER),
   getWebpackConfig(),
-  customFs.checkFile(MIDDLEWARES_FILE)
+  customFs.checkFile(MIDDLEWARES_FILE),
 ]).then(([header, webpackConfig, customMiddlewaresExist]) => {
-
   const compiler = webpack(webpackConfig);
 
   app.use(webpackMiddleware(compiler, {
     serverSideRender: true,
-    stats: 'minimal'
+    stats: 'minimal',
   }));
 
   app.use((req, res, next) => {
@@ -51,16 +53,16 @@ Promise.all([
 
   app.get('/preview.html', previewMiddleware);
 
-  if(customMiddlewaresExist){
+  if (customMiddlewaresExist) {
     try {
       const customMiddlewares = [].concat(require(MIDDLEWARES_FILE));
-      customMiddlewares.forEach(middleware => {
-        app.use.apply(app, [].concat(middleware));
+      customMiddlewares.forEach((middleware) => {
+        app.use(...[].concat(middleware));
       });
       console.log(`Added custom middlewares from ${MIDDLEWARES_FILE}`);
-    } catch(e) {
+    } catch (e) {
       console.error(
-        `Couldn't load middlewares from file ${MIDDLEWARES_FILE}. Error: ${e}`
+        `Couldn't load middlewares from file ${MIDDLEWARES_FILE}. Error: ${e}`,
       );
     }
   }
@@ -69,10 +71,23 @@ Promise.all([
 
   app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}\nOpen http://localhost:${PORT}/ on browser`);
+    console.log(`IP address ==> ${IP_ADDR}`);
   });
-
 }).catch(console.log);
 
+function getIpAddr() {
+  let addr = null;
+
+  Object.keys(networkInterfaces).forEach((dev) => {
+    networkInterfaces[dev].filter((details) => {
+      if (details.family === 'IPv4' && details.internal === false) {
+        addr = details.address;
+      }
+    });
+  });
+
+  return addr;
+}
 
 function appMiddleware(req, res) {
   const stats = assetsByChunkName = res.locals.webpackStats.toJson();
@@ -87,7 +102,6 @@ function previewMiddleware(req, res) {
 
   res.send(previewPageTemplate({
     assets: [].concat(stats.assetsByChunkName.preview).map(asset => `${stats.publicPath}${asset}`),
-    header: res.header
+    header: res.header,
   }));
-
 }
