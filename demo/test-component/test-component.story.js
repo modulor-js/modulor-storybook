@@ -6,4 +6,4 @@ storiesOf('Test')
   .add('hello', () =>
     `<test-component>
       hello world
-    </test-component>`)
+    </test-component>`);
