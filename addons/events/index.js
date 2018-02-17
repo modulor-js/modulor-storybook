@@ -1,3 +1,4 @@
+const Modulor = require('modulor/dom_utils');
 const AddonsApi = require('../../addons');
 const dateFormat = require('dateformat');
 const stylesTemplate = require('./style.css').default;
@@ -117,11 +118,12 @@ class EventsPreview extends HTMLElement {
 
 customElements.define('events-preview', EventsPreview);
 
-const withEvents = (events, render) => story => `
-  <events-preview events='${JSON.stringify(events)}'>
-    ${(render || story)()}
-  </events-preview>
-`;
+const withEvents = (events, render) => story => {
+  const $element = document.createElement('events-preview');
+  $element.setAttribute('events', JSON.stringify(events));
+  Modulor.html($element, render ? render() : story());
+  return $element;
+};
 
 module.exports = {
   withEvents,

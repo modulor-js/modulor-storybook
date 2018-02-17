@@ -25,8 +25,13 @@ class UsagePlugin extends HTMLElement {
 
     AddonsApi.onStory((story, storyKind) => {
       const storyObject = AddonsApi.getStory(story, storyKind);
+      const rendered = storyObject.render();
+      if(rendered instanceof Node){
+        this.innerHTML = 'Could not extract markup. Story is HTML element';
+        return;
+      }
 
-      const str = encode(htmlBeautify(storyObject.render(), {
+      const str = encode(htmlBeautify(rendered, {
         //options are listed in beautifier's source code
         wrap_line_length: 50,
         indent_size: 2,
