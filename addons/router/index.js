@@ -1,5 +1,6 @@
 const AddonsApi = require("modulor-storybook/addons");
 const { fireEvent, html } = require("modulor");
+const Modulor = require('modulor/dom_utils');
 
 
 const ROUTE_CONTROL_SELECTOR = `[ref="route-input"]`;
@@ -150,11 +151,12 @@ class RoutePreview extends HTMLElement {
 customElements.define("route-preview", RoutePreview);
 
 
-const withRoute = (route, render) => (story) => `
-  <route-preview route="${route}">
-    ${(render || story)()}
-  </route-preview>
-`;
+const withRoute = (route, render) => (story) => {
+  const $element = document.createElement('route-preview');
+  $element.setAttribute('route', route);
+  Modulor.html($element, render ? render() : story());
+  return $element;
+};
 
 module.exports = { withRoute };
 
