@@ -8,6 +8,8 @@ const AddonsApi = require('../../addons');
 
 const template = require('./sandbox-manager.html');
 
+const NO_STORIES_MSG = '<h1> No stories defined </h1>';
+
 require('../addons-panel/addons-panel');
 require('../stories-tree/stories-tree');
 require('../preview-frame/preview-frame');
@@ -28,8 +30,16 @@ const createElement = (name, attributes) => {
 class ManagerApp extends HTMLElement {
   connectedCallback() {
     this.innerHTML = template();
+    this.$leftPanel = this.querySelector('#left-panel');
+    this.$rightPanel = this.querySelector('#right-panel');
 
     const stories = getStories();
+
+    if (!Object.keys(stories).length) {
+      this.$rightPanel.innerHTML = NO_STORIES_MSG;
+      return;
+    }
+
     const firstStory = stories[Object.keys(stories)[0]];
     const addonPanels = AddonsApi.getPanels();
 
@@ -48,8 +58,6 @@ class ManagerApp extends HTMLElement {
     this.state = Object.assign({}, DEFAULT_PARAMS, this.router.getParams());
 
     // build panels
-    this.$leftPanel = this.querySelector('#left-panel');
-
     this.$leftPanel.appendChild(this.$storiesStree = createElement('stories-tree', {
       class: 'split content',
       state: stories,
@@ -59,8 +67,6 @@ class ManagerApp extends HTMLElement {
      *  correct order of components creation matters a lot here
      *  channel should be established before rendering plugins
      * */
-    this.$rightPanel = this.querySelector('#right-panel');
-
     this.$rightPanel.appendChild(this.$previewFrame = createElement('preview-frame', {
       class: 'split content',
       'url-base': this.router.options.base,
