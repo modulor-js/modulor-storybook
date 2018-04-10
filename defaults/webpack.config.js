@@ -4,6 +4,7 @@ const {
 } = require('../config');
 
 module.exports = {
+  mode: 'development',
   module: {
     rules: [],
   },
