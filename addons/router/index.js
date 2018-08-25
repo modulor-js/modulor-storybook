@@ -150,11 +150,23 @@ class RoutePreview extends HTMLElement {
 customElements.define("route-preview", RoutePreview);
 
 
-const withRoute = (route, render) => (story) => `
-  <route-preview route="${route}">
-    ${(render || story)()}
-  </route-preview>
-`;
+const withRoute = (route, render) => (story) => {
+  const storyContent = (render || story)();
+  if(typeof storyContent === 'function'){
+    const pluginContainer = document.createElement('route-preview');
+    pluginContainer.setAttribute('route', route);
+
+    return (container) => {
+      storyContent(pluginContainer);
+      container.appendChild(pluginContainer);
+    };
+  }
+  return `
+    <route-preview route="${route}">
+      ${(render || story)()}
+    </route-preview>
+  `;
+}
 
 module.exports = { withRoute };
 
