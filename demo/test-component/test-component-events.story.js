@@ -11,8 +11,13 @@ storiesOf('Test Events')
       extract: ['timeStamp', 'target.value'],
     },
   ]))
-  .add('hello', () =>
-    `<test-component>
-      hello world for events plugin
-    </test-component>`);
+  .add('hello', () => '<test-component>hello world for events plugin</test-component>')
+  .add('as-function', () => (container) => {
+    container.textContent = 'Check the JS console';
+    const element = document.createElement('test-component');
+    element.addEventListener('change', (e) => {
+      console.log('From the story function', e);
+    });
+    container.appendChild(element);
+  });
 
