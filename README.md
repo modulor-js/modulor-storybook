@@ -51,6 +51,12 @@ storiesOf('Button')
       <p>First Name: <input type="text" name="firstName"></p>
       <a-button type="submit" disabled>Reset</a-button>
     </form>`);
+  // or create story markup at runtime and add to container
+  .add('as-function', () => (container) => {
+    const element = document.createElement('a-button');
+    element.addEventListener('click', console.log);
+    container.appendChild(element);
+  })
 ```
 
 ### Run storybook

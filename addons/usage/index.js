@@ -1,6 +1,8 @@
 const AddonsApi = require("modulor-storybook/addons");
 
-const htmlBeautify = require('js-beautify').html_beautify;
+const beautifier = require('js-beautify');
+const htmlBeautify = beautifier.html_beautify;
+const jsBeautify = beautifier.js_beautify;
 
 
 const encode = (s) => s.replace(/&/g, '&amp;')
@@ -26,11 +28,18 @@ class UsagePlugin extends HTMLElement {
     AddonsApi.onStory((story, storyKind) => {
       const storyObject = AddonsApi.getStory(story, storyKind);
 
-      const str = encode(htmlBeautify(storyObject.render(), {
-        //options are listed in beautifier's source code
-        wrap_line_length: 50,
-        indent_size: 2,
-      }));
+      const storyContent = storyObject.render();
+
+      const beautifiedStoryContent = typeof storyContent === 'function'
+        ? jsBeautify(storyObject.render.toString(), {
+          indent_size: 2,
+        })
+        : htmlBeautify(storyContent, {
+          wrap_line_length: 50,
+          indent_size: 2,
+        });
+
+      const str = encode(beautifiedStoryContent);
 
       this.innerHTML = `
         <pre class="prettyprint"

@@ -117,11 +117,23 @@ class EventsPreview extends HTMLElement {
 
 customElements.define('events-preview', EventsPreview);
 
-const withEvents = (events, render) => story => `
-  <events-preview events='${JSON.stringify(events)}'>
-    ${(render || story)()}
-  </events-preview>
-`;
+const withEvents = (events, render) => story => {
+  const storyContent = (render || story)();
+  if(typeof storyContent === 'function'){
+    const pluginContainer = document.createElement('events-preview');
+    pluginContainer.setAttribute('events', JSON.stringify(events));
+
+    return (container) => {
+      storyContent(pluginContainer);
+      container.appendChild(pluginContainer);
+    };
+  }
+  return `
+    <events-preview events='${JSON.stringify(events)}'>
+      ${storyContent}
+    </events-preview>
+  `
+};
 
 module.exports = {
   withEvents,
