@@ -1,11 +1,11 @@
-let config = {
+const config = {
   width: 80,
   height: 75,
 };
 
 module.exports = {
   getDefaultParams(){
-    return config;
+    return Object.assign({}, config);
   },
 
   setDefaultParams(params){
