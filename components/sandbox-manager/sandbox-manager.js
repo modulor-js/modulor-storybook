@@ -120,7 +120,7 @@ class ManagerApp extends HTMLElement {
      *  here all routes changes will be observed
      *  only query parameters will be used
      * */
-    this.router.add('*', (path, query) => {
+    this.router.add('(.*)', (path, query) => {
       // set sizes
       const width = Number(query.width);
       const height = Number(query.height);
