@@ -5,7 +5,7 @@ const { Router } = require('modulor/router');
 const { getStories } = require('../../js/story');
 const Channel = require('../../js/channel');
 const AddonsApi = require('../../addons');
-const config = require('../../js/config');
+const { getDefaultParams } = require('../../js/config');
 
 const template = require('./sandbox-manager.html');
 
@@ -43,7 +43,7 @@ class ManagerApp extends HTMLElement {
 
     const firstStory = stories[Object.keys(stories)[0]];
     const addonPanels = AddonsApi.getPanels();
-    const defaultParams = config.getDefaultParams();
+    const defaultParams = getDefaultParams();
 
     const DEFAULT_PARAMS = Object.assign({}, defaultParams, {
       story: firstStory.storyName,
