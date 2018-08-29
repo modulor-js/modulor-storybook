@@ -2,13 +2,14 @@
 
 const express = require('express');
 const webpack = require('webpack');
+const favicon = require('serve-favicon');
 const program = require('commander');
 const pack = require('./package');
 
 const customFs = require('./lib/fs');
 const getWebpackConfig = require('./lib/get_webpack_config');
 
-const { CUSTOM_PREVIEW_HEADER, MIDDLEWARES_FILE } = require('./config').paths;
+const { CUSTOM_PREVIEW_HEADER, MIDDLEWARES_FILE, FAVICON_FILE, FALLBACK_FAVICON_FILE } = require('./config').paths;
 
 const managerPageTemplate = require('./templates/manager_page.html');
 const previewPageTemplate = require('./templates/preview_page.html');
@@ -38,8 +39,14 @@ Promise.all([
   customFs.readFile(CUSTOM_PREVIEW_HEADER),
   getWebpackConfig(),
   customFs.checkFile(MIDDLEWARES_FILE),
-]).then(([header, webpackConfig, customMiddlewaresExist]) => {
+  customFs.checkFile(FAVICON_FILE),
+]).then(([header, webpackConfig, customMiddlewaresExist, faviconFileExists]) => {
   const compiler = webpack(webpackConfig);
+
+  if(faviconFileExists){
+    console.log('using custon favicon');
+  }
+  app.use(favicon(faviconFileExists ? FAVICON_FILE : FALLBACK_FAVICON_FILE));
 
   app.use(webpackMiddleware(compiler, {
     serverSideRender: true,

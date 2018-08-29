@@ -192,12 +192,18 @@ module.exports = [
 ]
 ```
 
+
 #### Use cases
 
 - Mock ajax calls
 - Redirect ajax calls to another endpoint
 - Base authorisation
 - etc
+
+
+### `favicon.ico`
+
+Custom project icon
 
 ----
 

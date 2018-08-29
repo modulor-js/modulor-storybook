@@ -7,7 +7,7 @@ const path = require('path');
 const fs = require('fs');
 
 const customFs = require('./lib/fs');
-const { CUSTOM_PREVIEW_HEADER } = require('./config').paths;
+const { CUSTOM_PREVIEW_HEADER, FAVICON_FILE, FALLBACK_FAVICON_FILE } = require('./config').paths;
 
 const getWebpackConfig = require('./lib/get_webpack_config');
 
@@ -27,7 +27,8 @@ program
 Promise.all([
   customFs.readFile(CUSTOM_PREVIEW_HEADER),
   getWebpackConfig(),
-]).then(([header, webpackConfig]) => {
+  customFs.checkFile(FAVICON_FILE),
+]).then(([header, webpackConfig, faviconFileExists]) => {
   if (program.output) {
     if (!fs.existsSync(program.output)) {
       // Make output Directory
@@ -60,6 +61,11 @@ Promise.all([
       header: header,
       assets: [].concat(statsJson.assetsByChunkName.preview).map(asset => `${statsJson.publicPath}${asset}`),
     }));
+
+    customFs.copyFile(
+      faviconFileExists ? FAVICON_FILE : FALLBACK_FAVICON_FILE,
+      path.resolve(BUILD_DIR, 'favicon.ico')
+    );
 
   });
 }).catch(console.log);

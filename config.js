@@ -45,5 +45,8 @@ module.exports = {
 
     MANAGER_APP: path.resolve(PROJECT_DIR, 'js/manager.js'),
     PREVIEW_APP: path.resolve(PROJECT_DIR, 'js/preview.js'),
+
+    FAVICON_FILE: path.resolve(TARGET_DIR, storiesConfig.storybookDir, 'favicon.ico'),
+    FALLBACK_FAVICON_FILE: path.resolve(PROJECT_DIR, 'favicon.ico'),
   }
 }
