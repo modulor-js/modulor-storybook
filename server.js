@@ -15,6 +15,7 @@ const managerPageTemplate = require('./templates/manager_page.html');
 const previewPageTemplate = require('./templates/preview_page.html');
 
 const webpackMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const networkInterfaces = require('os').networkInterfaces();
 
@@ -43,7 +44,7 @@ Promise.all([
 ]).then(([header, webpackConfig, customMiddlewaresExist, faviconFileExists]) => {
   const compiler = webpack(webpackConfig);
 
-  if(faviconFileExists){
+  if (faviconFileExists) {
     console.log('using custon favicon');
   }
   app.use(favicon(faviconFileExists ? FAVICON_FILE : FALLBACK_FAVICON_FILE));
@@ -51,7 +52,11 @@ Promise.all([
   app.use(webpackMiddleware(compiler, {
     serverSideRender: true,
     stats: 'minimal',
+    noInfo: true,
+    publicPath: webpackConfig.output.publicPath,
   }));
+
+  app.use(webpackHotMiddleware(compiler));
 
   app.use((req, res, next) => {
     res.header = header || '';

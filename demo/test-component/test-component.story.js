@@ -2,8 +2,10 @@ import { storiesOf } from '../../js/story';
 
 require('./test-component');
 
-storiesOf('Test')
-  .add('hello', () => '<test-component>hello world</test-component>')
+storiesOf('A-Test')
+  .add('hello', () => `
+    <test-component>hello world</test-component>
+  `)
   .add('as-function', () => (container) => {
     container.textContent = 'Check the JS console';
     const element = document.createElement('test-component');
