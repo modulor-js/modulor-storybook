@@ -8,6 +8,7 @@ module.exports = {
   module: {
     rules: [],
   },
+  plugins: [],
   resolve: {
     modules: [ TARGET_NODE_MODULES, PROJECT_NODE_MODULES ]
   },
